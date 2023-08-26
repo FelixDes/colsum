@@ -78,7 +78,40 @@ class CalcFunctionParserTest {
                     Pair(TokenType.PARENTHESIS_CLOSE, ")"),
                 ),
                 84.7
-            )
+            ),
+            Arguments.of(
+                listOf(
+                    Pair(TokenType.FUN_NAME, "calc"),
+                    Pair(TokenType.PARENTHESIS_OPEN, "("),
+                    Pair(TokenType.FUN_NAME, "calc"),
+                    Pair(TokenType.PARENTHESIS_OPEN, "("),
+                    Pair(TokenType.PARENTHESIS_OPEN, "("),
+                    Pair(TokenType.NUMBER, "2"),
+                    Pair(TokenType.OPERATOR_PLUS, "+"),
+                    Pair(TokenType.NUMBER, "3"),
+                    Pair(TokenType.OPERATOR_MUL, "*"),
+                    Pair(TokenType.NUMBER, "4"),
+                    Pair(TokenType.PARENTHESIS_CLOSE, ")"),
+                    Pair(TokenType.OPERATOR_DIV, "/"),
+                    Pair(TokenType.NUMBER, "2"),
+                    Pair(TokenType.PARENTHESIS_CLOSE, ")"),
+                    Pair(TokenType.OPERATOR_PLUS, "+"),
+                    Pair(TokenType.FUN_NAME, "calc"),
+                    Pair(TokenType.PARENTHESIS_OPEN, "("),
+                    Pair(TokenType.PARENTHESIS_OPEN, "("),
+                    Pair(TokenType.NUMBER, "2"),
+                    Pair(TokenType.OPERATOR_PLUS, "+"),
+                    Pair(TokenType.NUMBER, "3"),
+                    Pair(TokenType.OPERATOR_MUL, "*"),
+                    Pair(TokenType.NUMBER, "4"),
+                    Pair(TokenType.PARENTHESIS_CLOSE, ")"),
+                    Pair(TokenType.OPERATOR_DIV, "/"),
+                    Pair(TokenType.NUMBER, "2"),
+                    Pair(TokenType.PARENTHESIS_CLOSE, ")"),
+                    Pair(TokenType.PARENTHESIS_CLOSE, ")"),
+                ),
+                14.0
+            ),
         )
     }
 
