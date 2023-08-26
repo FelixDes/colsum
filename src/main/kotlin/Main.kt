@@ -62,120 +62,142 @@ sealed class ASTNode<ResT> {
 //        }
 //    }
 
-    class CalculatingNode<ResT : Calculable<*>>(
+    class CalculatingNode<ResT : Calculable<ResT>>(
         private val operation: TokenType,
         private val leftNode: ResT,
         private val rightNode: ResT,
     ) : ASTNode<ResT>() {
         override fun compute(): ResT {
             return when (operation) {
-                TokenType.OPERATOR_PLUS -> leftNode as Calculable<ResT> + rightNode
-                TokenType.OPERATOR_MINUS -> leftNode as Calculable<ResT> - rightNode
-                TokenType.OPERATOR_MUL -> leftNode as Calculable<ResT> * rightNode
-                TokenType.OPERATOR_DIV -> leftNode as Calculable<ResT> / rightNode
+                TokenType.OPERATOR_PLUS -> leftNode + rightNode
+                TokenType.OPERATOR_MINUS -> leftNode - rightNode
+                TokenType.OPERATOR_MUL -> leftNode * rightNode
+                TokenType.OPERATOR_DIV -> leftNode / rightNode
                 else -> throw ParseException("Unknown operation: $operation")
             }
         }
     }
 
-    sealed class NumberNode : ASTNode<Double>() {
-        data object NoneNode : NumberNode(), Calculable<NoneNode> {
-            override fun compute(): Double {
-                return 0.0
-            }
+    sealed class NumberNode private constructor(
+        protected val value: Double = 0.0,
+    ) : ASTNode<Double>(), Calculable<NumberNode> {
 
-            override fun plus(other: NoneNode): NoneNode {
+        override fun compute(): Double {
+            return value
+        }
+
+        data object NoneNode : NumberNode(0.0) {
+            override fun plus(other: NumberNode): NumberNode {
                 throw SemanticException("Cannot do calculation on `none`")
             }
 
-            override fun minus(other: NoneNode): NoneNode {
+            override fun minus(other: NumberNode): NumberNode {
                 throw SemanticException("Cannot do calculation on `none`")
             }
 
-            override fun div(other: NoneNode): NoneNode {
+            override fun div(other: NumberNode): NumberNode {
                 throw SemanticException("Cannot do calculation on `none`")
             }
 
-            override fun times(other: NoneNode): NoneNode {
+            override fun times(other: NumberNode): NumberNode {
                 throw SemanticException("Cannot do calculation on `none`")
             }
         }
 
-        data class DoubleNode(private val value: Double) : NumberNode(), Calculable<DoubleNode> {
+        class DoubleNode(value: Double) : NumberNode(value) {
 
-            constructor(value: String) : this(BigDecimal(value).toDouble())
-
-            override fun compute(): Double {
-                return value
+            override fun plus(other: NumberNode): NumberNode {
+                if (other !is DoubleNode) throw SemanticException("Impossible cast")
+                return DoubleNode(value + other.value)
             }
 
-            override fun plus(other: DoubleNode): DoubleNode {
-                return DoubleNode(this.value + other.value)
+            override fun minus(other: NumberNode): NumberNode {
+                if (other !is DoubleNode) throw SemanticException("Impossible cast")
+                return DoubleNode(value - other.value)
             }
 
-            override fun minus(other: DoubleNode): DoubleNode {
-                return DoubleNode(this.value - other.value)
+            override fun div(other: NumberNode): NumberNode {
+                if (other !is DoubleNode) throw SemanticException("Impossible cast")
+                return DoubleNode(value / other.value)
             }
 
-            override fun times(other: DoubleNode): DoubleNode {
-                return DoubleNode(this.value * other.value)
-            }
-
-            override fun div(other: DoubleNode): DoubleNode {
-                return DoubleNode(this.value / other.value)
+            override fun times(other: NumberNode): NumberNode {
+                if (other !is DoubleNode) throw SemanticException("Impossible cast")
+                return DoubleNode(value * other.value)
             }
         }
 
-        data class PercentDoubleNode(private val value: Double) : NumberNode(), Calculable<PercentDoubleNode> {
-            constructor(value: String) : this(BigDecimal(value.substring(0, value.length - 1)).toDouble())
+        class DoublePercentNode(value: Double) : NumberNode(value) {
 
-            override fun compute(): Double {
-                return value
+            override fun plus(other: NumberNode): NumberNode {
+                if (other !is DoublePercentNode) throw SemanticException("Impossible cast")
+                return DoublePercentNode(value + other.value)
             }
 
-            override fun plus(other: PercentDoubleNode): PercentDoubleNode {
-                return PercentDoubleNode(this.value + other.value)
+            override fun minus(other: NumberNode): NumberNode {
+                if (other !is DoublePercentNode) throw SemanticException("Impossible cast")
+                return DoublePercentNode(value + other.value)
             }
 
-            override fun minus(other: PercentDoubleNode): PercentDoubleNode {
-                return PercentDoubleNode(this.value - other.value)
+            override fun div(other: NumberNode): NumberNode {
+                if (other !is DoublePercentNode) throw SemanticException("Impossible cast")
+                return DoublePercentNode(value + other.value)
             }
 
-            override fun times(other: PercentDoubleNode): PercentDoubleNode {
-                return PercentDoubleNode(this.value * other.value)
+            override fun times(other: NumberNode): NumberNode {
+                if (other !is DoublePercentNode) throw SemanticException("Impossible cast")
+                return DoublePercentNode(value + other.value)
             }
 
-            override fun div(other: PercentDoubleNode): PercentDoubleNode {
-                return PercentDoubleNode(this.value / other.value)
+        }
+
+        companion object {
+            fun buildNone(): NumberNode {
+                return NoneNode
+            }
+
+            fun buildPercent(value: Double): NumberNode {
+                return DoublePercentNode(value)
+            }
+
+            fun buildPercent(value: String): NumberNode {
+                return buildPercent(BigDecimal(value.substringBefore('%')).toDouble())
+            }
+
+            fun buildNumber(value: Double): NumberNode {
+                return DoubleNode(value)
+            }
+
+            fun buildNumber(value: String): NumberNode {
+                return buildNumber(BigDecimal(value).toDouble())
             }
         }
-    }
-
-    // USABLE (only rgb/rgba)
-    data class ColorFunctionNode(
-        private val name: String, private val args: List<NumberNode.DoubleNode>
-    ) : ASTNode<CssColor>() {
-        override fun compute(): CssColor = getParseFunctionForName(name)(args.map { it.compute() })
-
-        private fun getParseFunctionForName(name: String): (List<Double>) -> CssColor {
-            val functions = mutableMapOf<String, (List<Double>) -> CssColor>(
-                "rgb" to CssColor::fromRGBList, "rgba" to CssColor::fromRGBList
-                // ...
-            )
-
-
-
-            if (name in functions) {
-                return functions[name]!!
-            } else throw ParseException("In function with name: $name")
-        }
-    }
-
-    // READY
-    data class HexColorNode(private val hex: String) : ASTNode<CssColor>() {
-        override fun compute(): CssColor = CssColor.fromHEX(hex.substring(1))
     }
 }
+
+// USABLE (only rgb/rgba)
+data class ColorFunctionNode(
+    private val name: String, private val args: List<NumberNode>
+) : ASTNode<CssColor>() {
+    override fun compute(): CssColor = getParseFunctionForName(name)(args.map { it.compute() })
+
+    private fun getParseFunctionForName(name: String): (List<Double>) -> CssColor {
+        val functions = mutableMapOf<String, (List<Double>) -> CssColor>(
+            "rgb" to CssColor::fromRGBList, "rgba" to CssColor::fromRGBList
+            // ...
+        )
+
+        if (name in functions) {
+            return functions[name]!!
+        } else throw ParseException("In function with name: $name")
+    }
+}
+
+// READY
+data class HexColorNode(private val hex: String) : ASTNode<CssColor>() {
+    override fun compute(): CssColor = CssColor.fromHEX(hex.substring(1))
+}
+
 
 fun analyser(tokens: List<Pair<Token, String>>) {
 //    val r = Parser.RootParser<>(tokens)
