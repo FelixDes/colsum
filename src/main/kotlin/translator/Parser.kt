@@ -3,6 +3,7 @@ package translator
 import ASTNode
 import ASTNode.*
 import Calculable
+import ColorFunctionNode
 import HexColorNode
 
 open class ParseException(message: String) : Exception(message)
@@ -279,7 +280,16 @@ sealed class Parser<ResT : ASTNode<*>>(protected val tokens: List<Pair<TokenType
             tokens, listOf()
         ) {
             override fun consumeDelegate(pos: Int): ParseResult<NumberNode> {
-                val (name, args, localPos) = getArgs(pos, ExpressionParser(tokens, NumberParser(tokens)))
+                val (name, args, localPos) = getArgs(
+                    pos, ExpressionParser(
+                        tokens, AlternativeParser(
+                            tokens, listOf(
+                                CalcFunctionParser(tokens),
+                                NumberParser(tokens),
+                            )
+                        )
+                    )
+                )
                 if (name == "calc") {
                     return ParseResult(localPos, args)
                 } else {
@@ -295,33 +305,14 @@ sealed class Parser<ResT : ASTNode<*>>(protected val tokens: List<Pair<TokenType
 //                )
 //            ) {
 //
-//            protected abstract val argParser: Parsable<NumberNode>
-//
-//            class ColorFunctionArgs(tokens: List<Pair<TokenType, String>>) : ColorFunction(tokens) {
-//                override val argParser: Parsable<NumberNode>
-//                    get() = AlternativeParser(
+//            override fun consumeDelegate(pos: Int): ParseResult<ColorFunctionNode> {
+//                val (name, args, localPos) = this.getArgs(
+//                    pos, AlternativeParser(
 //                        tokens, listOf(
-//                            NoneParser(tokens) as Parsable<NumberNode>,
-//                            ExpressionParser(tokens, DoubleParser(tokens)) as Parsable<NumberNode>
+//                            NoneParser
 //                        )
 //                    )
-//            }
-//
-////            class ColorFunctionWithPercentArgs(
-////                tokens: List<Pair<TokenType, String>>
-////            ) : ColorFunction(
-////                tokens
-////            )
-//
-//            class ColorFunctionArgParser(tokens: List<Pair<TokenType, String>>, argParser: Parsable<NumberNode>) :
-//                ArgParser<NumberNode>(tokens) {
-//                override fun consumeDelegate(pos: Int): ParseResult<NumberNode> {
-//                    TODO("Not yet implemented")
-//                }
-//            }
-//
-//            override fun consumeDelegate(pos: Int): ParseResult<ColorFunctionNode> {
-//                val (name, args, localPos) = this.getArgs(pos, ColorFunctionArgParser(tokens, this.argParser))
+//                )
 //                val func = ColorFunctionNode(name, args)
 //                return ParseResult(localPos, listOf(func))
 //            }

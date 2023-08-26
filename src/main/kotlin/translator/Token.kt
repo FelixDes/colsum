@@ -18,10 +18,10 @@ val CSS_EXPRESSION_TOKENS: List<Token> = listOf(
     Token(TokenType.PARENTHESIS_OPEN, """^\(""".toRegex(), "("),
     Token(TokenType.PARENTHESIS_CLOSE, """^\)""".toRegex(), ")"),
 
-    Token(TokenType.OPERATOR_PLUS, """^\+""".toRegex(), "+"),
-    Token(TokenType.OPERATOR_MINUS, """^-""".toRegex(), "-"),
-    Token(TokenType.OPERATOR_MUL, """^\*""".toRegex(), "*"),
-    Token(TokenType.OPERATOR_DIV, """^/""".toRegex(), "/"),
+    Token(TokenType.OPERATOR_PLUS, """^ \+ """.toRegex(), "+"),
+    Token(TokenType.OPERATOR_MINUS, """^ - """.toRegex(), "-"),
+    Token(TokenType.OPERATOR_MUL, """^ \* """.toRegex(), "*"),
+    Token(TokenType.OPERATOR_DIV, """^ / """.toRegex(), "/"),
 
     Token(TokenType.FUN_NAME, """^rgba?""".toRegex(), "rgb/rgba"),
     Token(TokenType.FUN_NAME, """^hsla?""".toRegex(), "hsl/hsla"),
