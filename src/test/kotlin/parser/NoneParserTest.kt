@@ -1,18 +1,18 @@
 package parser
 
 import ASTNode
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
 import translator.ParseException
 import translator.Parser
 import translator.TokenType
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class NoneParserTest {
     private val tokenSequence = listOf(
-            Pair(TokenType.NUMBER_NONE, "none"),
-        )
+        Pair(TokenType.NUMBER_NONE, "none"),
+    )
 
     @Test
     fun consumeColor_correct() {
@@ -24,7 +24,7 @@ class NoneParserTest {
         // then
         assertAll({ assertEquals(1, parserResult.posOffset) }, {
             assertEquals(
-                ASTNode.NumberNode.DoubleNode("0").compute(), parserResult.nodeList[0].compute()
+                ASTNode.NumberNode.buildNone().compute(), parserResult.nodeList[0].compute()
             )
         })
     }

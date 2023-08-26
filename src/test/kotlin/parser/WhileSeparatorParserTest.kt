@@ -1,11 +1,11 @@
 package parser
 
 import ASTNode
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
 import translator.ParseException
 import translator.Parser
 import translator.TokenType
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
@@ -27,7 +27,7 @@ class WhileSeparatorParserTest {
         val tokens = tokenSequence
         val parser = Parser.WhileSeparatorParser(
             tokens,
-            Parser.DoubleParser(tokens),
+            Parser.NumberParser(tokens),
             Parser.SingleTokenParser(tokens, TokenType.SEPARATOR)
         )
         for (tokenPair in tokens) {
@@ -37,9 +37,9 @@ class WhileSeparatorParserTest {
             assertAll({ assertEquals(5, parserResult.posOffset) }, {
                 assertEquals(
                     listOf(
-                        ASTNode.NumberNode.DoubleNode("1").compute(),
-                        ASTNode.NumberNode.DoubleNode("2").compute(),
-                        ASTNode.NumberNode.DoubleNode("3").compute(),
+                        ASTNode.NumberNode.buildNumber(1.0).compute(),
+                        ASTNode.NumberNode.buildNumber(2.0).compute(),
+                        ASTNode.NumberNode.buildNumber(3.0).compute(),
                     ), parserResult.nodeList.map { o -> o.compute() }
                 )
             })

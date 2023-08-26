@@ -1,6 +1,7 @@
 package parser
 
 import ASTNode
+import HexColorNode
 import translator.ParseException
 import translator.Parser
 import translator.TokenType
@@ -28,7 +29,7 @@ class HexColorParserTest {
             // then
             assertAll(
                 { assertEquals(1, parserResult.posOffset) },
-                { assertEquals(ASTNode.HexColorNode(tokenPair.second), parserResult.nodeList[0]) }
+                { assertEquals(HexColorNode(tokenPair.second), parserResult.nodeList[0]) }
             )
         }
     }

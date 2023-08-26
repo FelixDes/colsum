@@ -25,7 +25,7 @@ class ParenthesisWrapperParserTest {
         val tokens = tokenSequence
         val innerParser = Parser.WhileSeparatorParser(
             tokens,
-            Parser.DoubleParser(tokens),
+            Parser.NumberParser(tokens),
             Parser.SingleTokenParser(tokens, TokenType.SEPARATOR)
         )
         val parser = Parser.ParenthesisWrapperParser(tokens, innerParser)
@@ -44,7 +44,7 @@ class ParenthesisWrapperParserTest {
         val tokens = tokenSequence.subList(1, tokenSequence.size)
         val innerParser = Parser.WhileSeparatorParser(
             tokens,
-            Parser.DoubleParser(tokens),
+            Parser.NumberParser(tokens),
             Parser.SingleTokenParser(tokens, TokenType.SEPARATOR)
         )
         val parser = Parser.ParenthesisWrapperParser(tokens, innerParser)
