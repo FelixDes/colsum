@@ -1,8 +1,8 @@
-package parser
+package translator.parser
 
-import ASTNode
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
+import translator.ASTNode
 import translator.ParseException
 import translator.Parser
 import translator.TokenType
@@ -14,9 +14,9 @@ class WhileSeparatorParserTest {
         Pair(TokenType.FUN_NAME, "rgb"),
         Pair(TokenType.PARENTHESIS_OPEN, "("),
         Pair(TokenType.NUMBER, "1"),
-        Pair(TokenType.SEPARATOR, ", "),
+        Pair(TokenType.COMMA_SEPARATOR, ", "),
         Pair(TokenType.NUMBER, "2"),
-        Pair(TokenType.SEPARATOR, ", "),
+        Pair(TokenType.COMMA_SEPARATOR, ", "),
         Pair(TokenType.NUMBER, "3"),
         Pair(TokenType.PARENTHESIS_CLOSE, ")"),
     )
@@ -28,7 +28,7 @@ class WhileSeparatorParserTest {
         val parser = Parser.WhileSeparatorParser(
             tokens,
             Parser.NumberParser(tokens),
-            Parser.SingleTokenParser(tokens, TokenType.SEPARATOR)
+            Parser.SingleTokenParser(tokens, TokenType.COMMA_SEPARATOR)
         )
         for (tokenPair in tokens) {
             // when

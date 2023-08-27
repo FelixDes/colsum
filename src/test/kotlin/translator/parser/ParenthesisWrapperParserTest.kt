@@ -1,4 +1,4 @@
-package parser
+package translator.parser
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
@@ -12,9 +12,9 @@ class ParenthesisWrapperParserTest {
     private val tokenSequence = listOf(
         Pair(TokenType.PARENTHESIS_OPEN, "("),
         Pair(TokenType.NUMBER, "2"),
-        Pair(TokenType.SEPARATOR, ","),
+        Pair(TokenType.COMMA_SEPARATOR, ","),
         Pair(TokenType.NUMBER, "3"),
-        Pair(TokenType.SEPARATOR, ","),
+        Pair(TokenType.COMMA_SEPARATOR, ","),
         Pair(TokenType.NUMBER, "4"),
         Pair(TokenType.PARENTHESIS_CLOSE, ")"),
     )
@@ -26,7 +26,7 @@ class ParenthesisWrapperParserTest {
         val innerParser = Parser.WhileSeparatorParser(
             tokens,
             Parser.NumberParser(tokens),
-            Parser.SingleTokenParser(tokens, TokenType.SEPARATOR)
+            Parser.SingleTokenParser(tokens, TokenType.COMMA_SEPARATOR)
         )
         val parser = Parser.ParenthesisWrapperParser(tokens, innerParser)
         // when
@@ -45,7 +45,7 @@ class ParenthesisWrapperParserTest {
         val innerParser = Parser.WhileSeparatorParser(
             tokens,
             Parser.NumberParser(tokens),
-            Parser.SingleTokenParser(tokens, TokenType.SEPARATOR)
+            Parser.SingleTokenParser(tokens, TokenType.COMMA_SEPARATOR)
         )
         val parser = Parser.ParenthesisWrapperParser(tokens, innerParser)
 
