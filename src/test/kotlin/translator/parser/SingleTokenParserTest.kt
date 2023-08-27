@@ -1,8 +1,8 @@
-package parser
+package translator.parser
 
-import ASTNode
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
+import translator.ASTNode
 import translator.ParseException
 import translator.Parser
 import translator.TokenType

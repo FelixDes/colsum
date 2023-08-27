@@ -1,4 +1,4 @@
-package parser
+package translator.integrational
 
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.params.ParameterizedTest
@@ -8,14 +8,12 @@ import translator.Parser
 import translator.TokenType
 import kotlin.test.assertEquals
 
-class CalcFunctionParserTest {
+class NumberExpressionParserTest {
     companion object {
         @JvmStatic
         fun tokenSequence() = listOf(
             Arguments.of(
                 listOf(
-                    Pair(TokenType.FUN_NAME, "calc"),
-                    Pair(TokenType.PARENTHESIS_OPEN, "("),
                     Pair(TokenType.PARENTHESIS_OPEN, "("),
                     Pair(TokenType.NUMBER, "2"),
                     Pair(TokenType.OPERATOR_PLUS, "+"),
@@ -25,13 +23,11 @@ class CalcFunctionParserTest {
                     Pair(TokenType.PARENTHESIS_CLOSE, ")"),
                     Pair(TokenType.OPERATOR_DIV, "/"),
                     Pair(TokenType.NUMBER, "2"),
-                    Pair(TokenType.PARENTHESIS_CLOSE, ")"),
                 ),
                 7.0
             ),
             Arguments.of(
                 listOf(
-                    Pair(TokenType.FUN_NAME, "calc"),
                     Pair(TokenType.PARENTHESIS_OPEN, "("),
                     Pair(TokenType.PARENTHESIS_OPEN, "("),
                     Pair(TokenType.PARENTHESIS_OPEN, "("),
@@ -60,20 +56,23 @@ class CalcFunctionParserTest {
             ),
             Arguments.of(
                 listOf(
-                    Pair(TokenType.FUN_NAME, "calc"),
                     Pair(TokenType.PARENTHESIS_OPEN, "("),
+
                     Pair(TokenType.PARENTHESIS_OPEN, "("),
                     Pair(TokenType.NUMBER, "12.1"),
                     Pair(TokenType.PARENTHESIS_CLOSE, ")"),
                     Pair(TokenType.OPERATOR_MUL, "*"),
+
                     Pair(TokenType.PARENTHESIS_OPEN, "("),
                     Pair(TokenType.NUMBER, "2"),
                     Pair(TokenType.OPERATOR_PLUS, "+"),
                     Pair(TokenType.NUMBER, "3"),
+
                     Pair(TokenType.OPERATOR_MUL, "*"),
                     Pair(TokenType.NUMBER, "4"),
                     Pair(TokenType.PARENTHESIS_CLOSE, ")"),
                     Pair(TokenType.OPERATOR_DIV, "/"),
+
                     Pair(TokenType.NUMBER, "2"),
                     Pair(TokenType.PARENTHESIS_CLOSE, ")"),
                 ),
@@ -81,36 +80,13 @@ class CalcFunctionParserTest {
             ),
             Arguments.of(
                 listOf(
-                    Pair(TokenType.FUN_NAME, "calc"),
-                    Pair(TokenType.PARENTHESIS_OPEN, "("),
-                    Pair(TokenType.FUN_NAME, "calc"),
-                    Pair(TokenType.PARENTHESIS_OPEN, "("),
-                    Pair(TokenType.PARENTHESIS_OPEN, "("),
-                    Pair(TokenType.NUMBER, "2"),
+                    Pair(TokenType.NUMBER_PERCENT, "3%"),
+                    Pair(TokenType.OPERATOR_MINUS, "-"),
+                    Pair(TokenType.NUMBER_PERCENT, "2%"),
                     Pair(TokenType.OPERATOR_PLUS, "+"),
-                    Pair(TokenType.NUMBER, "3"),
-                    Pair(TokenType.OPERATOR_MUL, "*"),
-                    Pair(TokenType.NUMBER, "4"),
-                    Pair(TokenType.PARENTHESIS_CLOSE, ")"),
-                    Pair(TokenType.OPERATOR_DIV, "/"),
-                    Pair(TokenType.NUMBER, "2"),
-                    Pair(TokenType.PARENTHESIS_CLOSE, ")"),
-                    Pair(TokenType.OPERATOR_PLUS, "+"),
-                    Pair(TokenType.FUN_NAME, "calc"),
-                    Pair(TokenType.PARENTHESIS_OPEN, "("),
-                    Pair(TokenType.PARENTHESIS_OPEN, "("),
-                    Pair(TokenType.NUMBER, "2"),
-                    Pair(TokenType.OPERATOR_PLUS, "+"),
-                    Pair(TokenType.NUMBER, "3"),
-                    Pair(TokenType.OPERATOR_MUL, "*"),
-                    Pair(TokenType.NUMBER, "4"),
-                    Pair(TokenType.PARENTHESIS_CLOSE, ")"),
-                    Pair(TokenType.OPERATOR_DIV, "/"),
-                    Pair(TokenType.NUMBER, "2"),
-                    Pair(TokenType.PARENTHESIS_CLOSE, ")"),
-                    Pair(TokenType.PARENTHESIS_CLOSE, ")"),
+                    Pair(TokenType.NUMBER_PERCENT, "10%"),
                 ),
-                14.0
+                11.0
             ),
         )
     }
@@ -119,7 +95,10 @@ class CalcFunctionParserTest {
     @MethodSource("tokenSequence")
     fun consume_correct(tokens: List<Pair<TokenType, String>>, res: Double) {
         // given
-        val parser = Parser.FunctionParser.CalcFunctionParser(tokens)
+        val parser = Parser.ExpressionParser(
+            tokens,
+            Parser.NumberParser(tokens)
+        )
         // when
         val parserResult = parser.consume(0)
         // then

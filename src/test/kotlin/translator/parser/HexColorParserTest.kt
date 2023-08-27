@@ -1,12 +1,11 @@
-package parser
+package translator.parser
 
-import ASTNode
-import HexColorNode
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
+import translator.ASTNode
 import translator.ParseException
 import translator.Parser
 import translator.TokenType
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
@@ -29,7 +28,7 @@ class HexColorParserTest {
             // then
             assertAll(
                 { assertEquals(1, parserResult.posOffset) },
-                { assertEquals(HexColorNode(tokenPair.second), parserResult.nodeList[0]) }
+                { assertEquals(ASTNode.HexColorNode(tokenPair.second), parserResult.nodeList[0]) }
             )
         }
     }
