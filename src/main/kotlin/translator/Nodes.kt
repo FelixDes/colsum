@@ -2,6 +2,7 @@ package translator
 
 import CssColor
 import java.math.BigDecimal
+import kotlin.math.roundToInt
 
 class SemanticException(message: String) : Exception(message)
 
@@ -200,18 +201,18 @@ sealed class ASTNode<ResT> {
         override fun compute(): CssColor {
             return when (name) {
                 "rgb", "rgba" -> {
-                    val red: Int = parse_None_Double_Percent_numberArg(args[0], 2.55)
-                    val green: Int = parse_None_Double_Percent_numberArg(args[1], 2.55)
-                    val blue: Int = parse_None_Double_Percent_numberArg(args[2], 2.55)
-                    val alpha: Int = if (args.size == 4) parseAlpha(args[3], 2.55) else 0
+                    val red: Int = parse_None_Double_Percent_numberArg(args[0])
+                    val green: Int = parse_None_Double_Percent_numberArg(args[1])
+                    val blue: Int = parse_None_Double_Percent_numberArg(args[2])
+                    val alpha: Double = if (args.size == 4) parseAlpha(args[3]) else 0.0
 
                     CssColor.fromRGBA(red, green, blue, alpha)
                 }
 //                "hsl", "hsla" -> {
-//                    val h: Int = parse_None_Double_Percent_numberArg(args[0], 2.55)
-//                    val s: Int = parse_None_Double_Percent_numberArg(args[1], 2.55)
-//                    val l: Int = parse_None_Double_Percent_numberArg(args[2], 2.55)
-//                    val a: Int = if (args.size == 4) parseAlpha(args[3], 2.55) else 0
+//                    val h: Int = parse_None_Double_Percent_numberArg(args[0])
+//                    val s: Int = parse_None_Double_Percent_numberArg(args[1])
+//                    val l: Int = parse_None_Double_Percent_numberArg(args[2])
+//                    val a: Int = if (args.size == 4) parseAlpha(args[3]) else 0
 //
 //                    CssColor.fromHSLA(red, green, blue, alpha)
 //                }
@@ -220,22 +221,22 @@ sealed class ASTNode<ResT> {
         }
 
         companion object {
-            private fun parse_None_Double_Percent_numberArg(arg: NumberNode, percentCoefficient: Double = 1.0) =
+            private fun parse_None_Double_Percent_numberArg(arg: NumberNode) =
                 when (arg) {
-                    is NumberNode.NoneNode -> arg.compute().toInt()
-                    is NumberNode.DoubleNode -> arg.compute().toInt()
-                    is NumberNode.DoublePercentNode -> (arg.compute() * percentCoefficient).toInt()
+                    is NumberNode.NoneNode -> arg.compute().roundToInt()
+                    is NumberNode.DoubleNode -> arg.compute().roundToInt()
+                    is NumberNode.DoublePercentNode -> (arg.compute() * 2.55).roundToInt()
                 }
 
-            private fun parseAngle(arg: NumberNode, percentCoefficient: Double = 1.0) = when (arg) {
-                is NumberNode.DoubleNode -> arg.compute().toInt()
-                is NumberNode.DoublePercentNode -> (arg.compute() * percentCoefficient).toInt()
-                else -> throw SemanticException("Alpha argument error: $arg")
-            }
+//            private fun parseAngle(arg: NumberNode, percentCoefficient: Double = 1.0) = when (arg) {
+//                is NumberNode.DoubleNode -> arg.compute().toInt()
+//                is NumberNode.DoublePercentNode -> (arg.compute() * percentCoefficient).toInt()
+//                else -> throw SemanticException("Alpha argument error: $arg")
+//            }
 
-            private fun parseAlpha(arg: NumberNode, percentCoefficient: Double = 1.0) = when (arg) {
-                is NumberNode.DoubleNode -> arg.compute().toInt()
-                is NumberNode.DoublePercentNode -> (arg.compute() * percentCoefficient).toInt()
+            private fun parseAlpha(arg: NumberNode) = when (arg) {
+                is NumberNode.DoubleNode -> arg.compute()
+                is NumberNode.DoublePercentNode -> arg.compute() * 0.01
                 else -> throw SemanticException("Alpha argument error: $arg")
             }
         }
