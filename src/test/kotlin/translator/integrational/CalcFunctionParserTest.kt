@@ -34,6 +34,23 @@ class CalcFunctionParserTest {
                     Pair(TokenType.FUN_NAME, "calc"),
                     Pair(TokenType.PARENTHESIS_OPEN, "("),
                     Pair(TokenType.PARENTHESIS_OPEN, "("),
+                    Pair(TokenType.NUMBER_PERCENT, "2"),
+                    Pair(TokenType.OPERATOR_PLUS, "+"),
+                    Pair(TokenType.NUMBER_PERCENT, "3"),
+                    Pair(TokenType.OPERATOR_MUL, "*"),
+                    Pair(TokenType.NUMBER_PERCENT, "4"),
+                    Pair(TokenType.PARENTHESIS_CLOSE, ")"),
+                    Pair(TokenType.OPERATOR_DIV, "/"),
+                    Pair(TokenType.NUMBER_PERCENT, "2"),
+                    Pair(TokenType.PARENTHESIS_CLOSE, ")"),
+                ),
+                7.0
+            ),
+            Arguments.of(
+                listOf(
+                    Pair(TokenType.FUN_NAME, "calc"),
+                    Pair(TokenType.PARENTHESIS_OPEN, "("),
+                    Pair(TokenType.PARENTHESIS_OPEN, "("),
                     Pair(TokenType.PARENTHESIS_OPEN, "("),
                     Pair(TokenType.NUMBER, "1"),
                     Pair(TokenType.OPERATOR_MUL, "*"),

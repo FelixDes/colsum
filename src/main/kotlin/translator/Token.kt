@@ -42,8 +42,5 @@ val CSS_EXPRESSION_TOKENS: List<Token> = listOf(
     Token(TokenType.OPERATOR_MUL, """^\*""".toRegex(), "*"),
     Token(TokenType.OPERATOR_DIV, """^/""".toRegex(), "/"),
 
-    Token(
-        TokenType.HEX_COLOR,
-        """^#[0-9a-f]{6}([0-9a-f]{2})?|#[0-9a-f]{3}[0-9a-f]?""".trimIndent().toRegex()
-    ),
+    Token(TokenType.HEX_COLOR, """^#[0-9a-f]{6}([0-9a-f]{2})?|#[0-9a-f]{3}[0-9a-f]?""".toRegex()),
 )

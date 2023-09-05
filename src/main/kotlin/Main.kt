@@ -1,15 +1,14 @@
-import translator.Token
+import translator.ASTNode
+import translator.Parser
 import translator.Tokenizer
 
-fun analyser(tokens: List<Pair<Token, String>>) {
-//    val r = Parser.RootParser<>(tokens)
-}
-
 fun main(args: Array<String>) {
-//    val test_string = "calc(calc(2 + 3% / 4) - 32)"
-    val test_string = "3% - 2% + 10%"
-    val tokens = Tokenizer.tokenize(test_string)
+//    val parser = ArgParser("colsum")
+//    val inputString by parser.option(ArgType.String, shortName = "i", description = "String for computation").required()
+//    parser.parse(args)
+//
 
-
-//    analyser(tokens)
+    val inputString = "calc(calc(2 + 3 / 4) - 32)"
+    val tokens = Tokenizer.tokenize(inputString)
+    println(Parser.FunctionParser.CalcFunctionParser(tokens).consume(0).nodeList[0].compute())
 }
