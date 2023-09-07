@@ -52,8 +52,8 @@ class ColorTest {
                 Arguments.of(
                     listOf(
                         CssColor.fromRGBA(255, 255, 255),
-                        CssColor.fromRGBA(255,0,0,0.5),
-                        CssColor.fromRGBA(0,255,0, 0.5),
+                        CssColor.fromRGBA(255, 0, 0, 0.5),
+                        CssColor.fromRGBA(0, 255, 0, 0.5),
                     ),
                     CssColor.fromRGBA(127, 191, 63, 1.0)
                 ),

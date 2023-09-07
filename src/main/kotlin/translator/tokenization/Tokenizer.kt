@@ -22,7 +22,14 @@ class Tokenizer {
                     }
                 }
                 if (match == null) {
-                    throw TokenizerException("Unknown token sequence for: ${input.substring(0, min(input.length, 10))}...")
+                    throw TokenizerException(
+                        "Unknown token sequence for: ${
+                            input.substring(
+                                0,
+                                min(input.length, 10)
+                            )
+                        }..."
+                    )
                 }
             }
             return resulTokens
