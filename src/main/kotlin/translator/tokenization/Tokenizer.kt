@@ -1,6 +1,6 @@
-package translator
+package translator.tokenization
 
-import mu.KotlinLogging
+import kotlin.math.min
 
 class TokenizerException(message: String) : Exception(message)
 
@@ -22,7 +22,7 @@ class Tokenizer {
                     }
                 }
                 if (match == null) {
-                    throw TokenizerException("Unknown token sequence for: ${input.substring(0, 10)}...")
+                    throw TokenizerException("Unknown token sequence for: ${input.substring(0, min(input.length, 10))}...")
                 }
             }
             return resulTokens

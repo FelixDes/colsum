@@ -2,10 +2,9 @@ package translator.parser
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import translator.ASTNode
-import translator.ParseException
-import translator.Parser
-import translator.TokenType
+import translator.nodes.ASTNode
+import translator.nodes.NumberNode
+import translator.tokenization.TokenType
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
@@ -24,7 +23,7 @@ class NoneParserTest {
         // then
         assertAll({ assertEquals(1, parserResult.posOffset) }, {
             assertEquals(
-                ASTNode.NumberNode.buildNone().compute(), parserResult.nodeList[0].compute()
+                NumberNode.buildNone().compute(), parserResult.nodeList[0].compute()
             )
         })
     }

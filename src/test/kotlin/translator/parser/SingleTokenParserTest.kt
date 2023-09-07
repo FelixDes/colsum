@@ -2,10 +2,8 @@ package translator.parser
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import translator.ASTNode
-import translator.ParseException
-import translator.Parser
-import translator.TokenType
+import translator.nodes.ASTNode
+import translator.tokenization.TokenType
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 

@@ -1,3 +1,4 @@
+import translator.nodes.Calculable
 import kotlin.math.abs
 import kotlin.math.round
 
@@ -5,7 +6,7 @@ import kotlin.math.round
 
 data class CssColor(
     private val red: Int, private val green: Int, private val blue: Int, private val alpha: Double = 1.0
-) {
+) : Calculable<CssColor> {
 
     companion object {
 
@@ -74,10 +75,7 @@ data class CssColor(
 
             fun res(red: Double, green: Double, blue: Double): CssColor {
                 return fromRGBA(
-                    ((red + m) * 255).toInt(),
-                    ((green + m) * 255).toInt(),
-                    ((blue + m) * 255).toInt(),
-                    alpha
+                    ((red + m) * 255).toInt(), ((green + m) * 255).toInt(), ((blue + m) * 255).toInt(), alpha
                 )
             }
 
@@ -94,16 +92,17 @@ data class CssColor(
     }
 
 
-    operator fun plus(color: CssColor): CssColor {
-        val bgAlpha = (color.alpha)
-        val bgRed = (color.red).toDouble() / 255
-        val bgGreen = (color.green).toDouble() / 255
-        val bgBlue = (color.blue).toDouble() / 255
+    override fun plus(color: CssColor): CssColor {
+        val addingAlpha = (color.alpha)
+        val addingRed = (color.red).toDouble() / 255
+        val addingGreen = (color.green).toDouble() / 255
+        val addingBlue = (color.blue).toDouble() / 255
 
-        val addingAlpha = (this.alpha)
-        val addingRed = (this.red).toDouble() / 255
-        val addingGreen = (this.green).toDouble() / 255
-        val addingBlue = (this.blue).toDouble() / 255
+
+        val bgAlpha = (this.alpha)
+        val bgRed = (this.red).toDouble() / 255
+        val bgGreen = (this.green).toDouble() / 255
+        val bgBlue = (this.blue).toDouble() / 255
 
         val resAlpha = bgAlpha * (1 - addingAlpha) + addingAlpha
         val resRed = bgRed * bgAlpha * (1 - addingAlpha) + addingRed * addingAlpha
@@ -113,6 +112,18 @@ data class CssColor(
         return fromRGBA(
             (resRed * 255).toInt(), (resGreen * 255).toInt(), (resBlue * 255).toInt(), resAlpha
         )
+    }
+
+    override fun minus(other: CssColor): CssColor {
+        TODO("Not yet implemented")
+    }
+
+    override fun div(other: CssColor): CssColor {
+        TODO("Not yet implemented")
+    }
+
+    override fun times(other: CssColor): CssColor {
+        TODO("Not yet implemented")
     }
 
     override fun toString(): String {

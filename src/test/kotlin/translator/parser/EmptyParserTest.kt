@@ -2,8 +2,7 @@ package translator.parser
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import translator.ASTNode
-import translator.Parser
+import translator.nodes.ASTNode
 import kotlin.test.assertEquals
 
 class EmptyParserTest {

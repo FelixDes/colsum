@@ -2,10 +2,8 @@ package translator.parser
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import translator.ASTNode
-import translator.ParseException
-import translator.Parser
-import translator.TokenType
+import translator.nodes.ASTNode
+import translator.tokenization.TokenType
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
@@ -21,14 +19,14 @@ class HexColorParserTest {
     fun consumeColor_correct() {
         // given
         val tokens = tokenSequence()
-        val parser = Parser.HexColorParser(tokens)
+        val parser = Parser.ColorParser(tokens)
         for ((i, tokenPair) in tokens.withIndex()) {
             // when
             val parserResult = parser.consume(i)
             // then
             assertAll(
                 { assertEquals(1, parserResult.posOffset) },
-                { assertEquals(ASTNode.HexColorNode(tokenPair.second), parserResult.nodeList[0]) }
+                { assertEquals(ASTNode.ColorNode(tokenPair.second), parserResult.nodeList[0]) }
             )
         }
     }
@@ -37,7 +35,7 @@ class HexColorParserTest {
     fun consumeColor_incorrect() {
         // given
         val tokens = tokenSequence()
-        val parser = Parser.HexColorParser(tokens)
+        val parser = Parser.ColorParser(tokens)
         // when + then
         assertFailsWith<ParseException> { parser.consume(-1) }
     }

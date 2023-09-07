@@ -1,7 +1,11 @@
-package translator
+package translator.parser
 
-import translator.ASTNode.*
-import translator.TokenType.*
+import translator.nodes.ASTNode.*
+import translator.tokenization.TokenType.*
+import translator.nodes.ASTNode
+import translator.nodes.Calculable
+import translator.nodes.NumberNode
+import translator.tokenization.TokenType
 
 open class ParseException(message: String) : Exception(message)
 
@@ -78,14 +82,25 @@ sealed class Parser<ResT : ASTNode<*>>(protected val tokens: List<Pair<TokenType
     }
 
     // READY TESTED
-    class HexColorParser(
+    private class HexColorParser(
         tokens: List<Pair<TokenType, String>>,
-    ) : Parser<HexColorNode>(tokens) {
-        override fun consumeDelegate(pos: Int): ParseResult<HexColorNode> {
+    ) : Parser<ColorNode>(tokens) {
+        override fun consumeDelegate(pos: Int): ParseResult<ColorNode> {
             if (tokens[pos].first == HEX_COLOR) {
-                return ParseResult(1, listOf(HexColorNode(tokens[pos].second)))
+                return ParseResult(1, listOf(ColorNode(tokens[pos].second)))
             }
             throw ParseException("No CssColor at pos: $pos")
+        }
+    }
+
+    class ColorParser(
+        tokens: List<Pair<TokenType, String>>,
+    ) : Parser<ColorNode>(tokens) {
+        override fun consumeDelegate(pos: Int): ParseResult<ColorNode> {
+            return AlternativeParser(tokens, listOf(
+                HexColorParser(tokens) as Parsable<ColorNode>,
+                FunctionParser.ColorFunctionParser(tokens)
+            )).consume(pos)
         }
     }
 
@@ -295,9 +310,9 @@ sealed class Parser<ResT : ASTNode<*>>(protected val tokens: List<Pair<TokenType
 
         // HSL - 0.3turn?
         class ColorFunctionParser(tokens: List<Pair<TokenType, String>>) :
-            FunctionParser<ColorFunctionNode, NumberNode>(tokens) {
+            FunctionParser<ColorNode, NumberNode>(tokens) {
 
-            override fun consumeDelegate(pos: Int): ParseResult<ColorFunctionNode> {
+            override fun consumeDelegate(pos: Int): ParseResult<ColorNode> {
                 val possibleSeparatorPatterns = listOf(
                     listOf(
                         SingleTokenParser(tokens, COMMA_SEPARATOR),
@@ -332,13 +347,12 @@ sealed class Parser<ResT : ASTNode<*>>(protected val tokens: List<Pair<TokenType
                     )
                 }
 
-                val r = AlternativeParser(
+                val rep = AlternativeParser(
                     tokens,
                     funcArgParsers
-                )
-                val rep = r.consume(pos).nodeList[0].compute()
+                ).consume(pos).nodeList[0].compute()
 
-                val func = ColorFunctionNode(rep.name, rep.argNodes)
+                val func = ColorNode(rep.name, rep.argNodes)
                 return ParseResult(rep.posOffset, listOf(func))
             }
         }
