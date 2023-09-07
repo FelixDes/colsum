@@ -1,12 +1,12 @@
 package translator.parser
 
-import translator.nodes.ASTNode.*
-import translator.tokenization.TokenType.*
 import translator.nodes.ASTNode
+import translator.nodes.ASTNode.*
 import translator.nodes.Calculable
 import translator.nodes.ColorNode
 import translator.nodes.NumberNode
 import translator.tokenization.TokenType
+import translator.tokenization.TokenType.*
 
 open class ParseException(message: String) : Exception(message)
 
@@ -98,10 +98,12 @@ sealed class Parser<ResT : ASTNode<*>>(protected val tokens: List<Pair<TokenType
         tokens: List<Pair<TokenType, String>>,
     ) : Parser<ColorNode>(tokens) {
         override fun consumeDelegate(pos: Int): ParseResult<ColorNode> {
-            return AlternativeParser(tokens, listOf(
-                HexColorParser(tokens) as Parsable<ColorNode>,
-                FunctionParser.ColorFunctionParser(tokens)
-            )).consume(pos)
+            return AlternativeParser(
+                tokens, listOf(
+                    HexColorParser(tokens) as Parsable<ColorNode>,
+                    FunctionParser.ColorFunctionParser(tokens)
+                )
+            ).consume(pos)
         }
     }
 

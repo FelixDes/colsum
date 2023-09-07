@@ -1,9 +1,7 @@
 package translator.nodes
 
-import CssColor
 import translator.parser.ParseException
 import translator.tokenization.TokenType
-import kotlin.math.roundToInt
 
 class SemanticException(message: String) : Exception(message)
 
