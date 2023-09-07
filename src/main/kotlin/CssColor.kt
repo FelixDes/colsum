@@ -92,17 +92,16 @@ data class CssColor(
     }
 
 
-    override fun plus(color: CssColor): CssColor {
-        val addingAlpha = (color.alpha)
-        val addingRed = (color.red).toDouble() / 255
-        val addingGreen = (color.green).toDouble() / 255
-        val addingBlue = (color.blue).toDouble() / 255
-
-
+    override fun plus(other: CssColor): CssColor {
         val bgAlpha = (this.alpha)
         val bgRed = (this.red).toDouble() / 255
         val bgGreen = (this.green).toDouble() / 255
         val bgBlue = (this.blue).toDouble() / 255
+
+        val addingAlpha = (other.alpha)
+        val addingRed = (other.red).toDouble() / 255
+        val addingGreen = (other.green).toDouble() / 255
+        val addingBlue = (other.blue).toDouble() / 255
 
         val resAlpha = bgAlpha * (1 - addingAlpha) + addingAlpha
         val resRed = bgRed * bgAlpha * (1 - addingAlpha) + addingRed * addingAlpha

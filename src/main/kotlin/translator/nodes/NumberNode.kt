@@ -96,7 +96,6 @@ sealed class NumberNode private constructor(
             if (other !is DoublePercentNode) throw SemanticException("Impossible cast")
             return DoublePercentNode(value * other.value)
         }
-
     }
 
     companion object {

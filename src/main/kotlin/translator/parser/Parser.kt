@@ -4,6 +4,7 @@ import translator.nodes.ASTNode.*
 import translator.tokenization.TokenType.*
 import translator.nodes.ASTNode
 import translator.nodes.Calculable
+import translator.nodes.ColorNode
 import translator.nodes.NumberNode
 import translator.tokenization.TokenType
 
