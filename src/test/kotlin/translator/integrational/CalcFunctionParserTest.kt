@@ -4,8 +4,8 @@ import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import translator.Parser
-import translator.TokenType
+import translator.parser.Parser
+import translator.tokenization.TokenType
 import kotlin.test.assertEquals
 
 class CalcFunctionParserTest {

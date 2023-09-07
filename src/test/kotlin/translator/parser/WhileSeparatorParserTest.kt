@@ -2,10 +2,9 @@ package translator.parser
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import translator.ASTNode
-import translator.ParseException
-import translator.Parser
-import translator.TokenType
+import translator.nodes.ASTNode
+import translator.nodes.NumberNode
+import translator.tokenization.TokenType
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
@@ -37,9 +36,9 @@ class WhileSeparatorParserTest {
             assertAll({ assertEquals(5, parserResult.posOffset) }, {
                 assertEquals(
                     listOf(
-                        ASTNode.NumberNode.buildNumber(1.0).compute(),
-                        ASTNode.NumberNode.buildNumber(2.0).compute(),
-                        ASTNode.NumberNode.buildNumber(3.0).compute(),
+                        NumberNode.buildNumber(1.0).compute(),
+                        NumberNode.buildNumber(2.0).compute(),
+                        NumberNode.buildNumber(3.0).compute(),
                     ), parserResult.nodeList.map { o -> o.compute() }
                 )
             })

@@ -4,9 +4,9 @@ import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import translator.ASTNode
-import translator.Parser
-import translator.TokenType
+import translator.nodes.ASTNode
+import translator.nodes.NumberNode
+import translator.tokenization.TokenType
 import kotlin.test.assertEquals
 
 class ArgSeparatorListParserTest {
@@ -25,9 +25,9 @@ class ArgSeparatorListParserTest {
                     Pair(TokenType.PARENTHESIS_CLOSE, ")"),
                 ),
                 listOf(
-                    ASTNode.NumberNode.buildNumber(2.0),
-                    ASTNode.NumberNode.buildNumber(3.0),
-                    ASTNode.NumberNode.buildNumber(5.0),
+                    NumberNode.buildNumber(2.0),
+                    NumberNode.buildNumber(3.0),
+                    NumberNode.buildNumber(5.0),
                 )
             )
         )
@@ -35,7 +35,7 @@ class ArgSeparatorListParserTest {
 
     @ParameterizedTest
     @MethodSource("tokenSequence")
-    fun consumeColor_correct(tokens: List<Pair<TokenType, String>>, nodes: List<ASTNode.NumberNode>) {
+    fun consumeColor_correct(tokens: List<Pair<TokenType, String>>, nodes: List<NumberNode>) {
         // given
         val parser = Parser.ArgSeparatorListParser(
             tokens, Parser.NumberParser(tokens), listOf(

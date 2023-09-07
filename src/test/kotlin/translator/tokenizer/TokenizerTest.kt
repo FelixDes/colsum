@@ -3,8 +3,8 @@ package translator.tokenizer
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import translator.TokenType
-import translator.Tokenizer
+import translator.tokenization.TokenType
+import translator.tokenization.Tokenizer
 import kotlin.test.assertEquals
 
 class TokenizerTest {

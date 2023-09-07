@@ -52,7 +52,6 @@ class ColorTest {
                 Arguments.of(
                     listOf(
                         CssColor.fromRGBA(255, 255, 255),
-
                         CssColor.fromRGBA(255,0,0,0.5),
                         CssColor.fromRGBA(0,255,0, 0.5),
                     ),
@@ -79,6 +78,6 @@ class ColorTest {
     @ParameterizedTest
     @MethodSource("colorCompositionProvider")
     fun colorCompositionTest(colors: List<CssColor>, res: CssColor) {
-        assertEquals(res, colors.reduce { c1, c2 -> c2 + c1 })
+        assertEquals(res, colors.reduce { c1, c2 -> c1 + c2 })
     }
 }

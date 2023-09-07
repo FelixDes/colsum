@@ -1,14 +1,24 @@
-import translator.ASTNode
-import translator.Parser
-import translator.Tokenizer
+import kotlinx.cli.ArgParser
+import kotlinx.cli.ArgType
+import kotlinx.cli.default
+import kotlinx.cli.required
+import translator.translate
 
 fun main(args: Array<String>) {
-//    val parser = ArgParser("colsum")
-//    val inputString by parser.option(ArgType.String, shortName = "i", description = "String for computation").required()
-//    parser.parse(args)
-//
+    val parser = ArgParser("colsum")
+    val mainExpression by parser.option(
+        ArgType.String,
+        shortName = "e",
+        fullName = "expression",
+        description = "String for computation"
+    ).required()
+    val backgroundColor by parser.option(
+        ArgType.String,
+        shortName = "b",
+        fullName = "background",
+        description = "background color"
+    ).default("#FFF")
+    parser.parse(args)
 
-    val inputString = "calc(calc(2 + 3 / 4) - 32)"
-    val tokens = Tokenizer.tokenize(inputString)
-    println(Parser.FunctionParser.CalcFunctionParser(tokens).consume(0).nodeList[0].compute())
+    println(translate(mainExpression, backgroundColor).toString())
 }
