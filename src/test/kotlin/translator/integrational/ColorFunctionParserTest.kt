@@ -5,7 +5,7 @@ import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import translator.parser.Parser
+import translator.parser.FunctionParser
 import translator.tokenization.TokenType
 import kotlin.test.assertEquals
 
@@ -100,7 +100,7 @@ class ColorFunctionParserTest {
     @MethodSource("tokenSequence")
     fun consume_correct(tokens: List<Pair<TokenType, String>>, res: CssColor) {
         // given
-        val parser = Parser.FunctionParser.ColorFunctionParser(tokens)
+        val parser = FunctionParser.ColorFunctionParser(tokens)
         // when
         val parserResult = parser.consume(0)
         val color = parserResult.nodeList[0].compute()

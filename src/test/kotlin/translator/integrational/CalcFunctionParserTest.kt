@@ -4,7 +4,7 @@ import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import translator.parser.Parser
+import translator.parser.FunctionParser
 import translator.tokenization.TokenType
 import kotlin.test.assertEquals
 
@@ -138,7 +138,7 @@ class CalcFunctionParserTest {
     @MethodSource("tokenSequence")
     fun consume_correct(tokens: List<Pair<TokenType, String>>, res: Double) {
         // given
-        val parser = Parser.FunctionParser.CalcFunctionParser(tokens)
+        val parser = FunctionParser.CalcFunctionParser(tokens)
         // when
         val parserResult = parser.consume(0)
         // then

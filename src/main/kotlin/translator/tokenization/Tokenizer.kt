@@ -16,7 +16,6 @@ class Tokenizer {
                     match = token.regex.find(input.trim())
                     if (match != null) {
                         resulTokens.add(token.tokenType to match.value)
-//                        logger.debug { """Pair(TokenType.${token.tokenType}, "${match.value}"),""" }
                         input = input.substring(match.range.last() + countSpacesInStart(input) + 1)
                         break
                     }
