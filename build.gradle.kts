@@ -3,7 +3,7 @@ plugins {
     application
 }
 
-group = "org.example"
+group = "org.colsum"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -11,8 +11,6 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
-    implementation("ch.qos.logback:logback-classic:1.4.11")
     implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.5")
     testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0")
@@ -28,4 +26,21 @@ kotlin {
 
 application {
     mainClass.set("MainKt")
+}
+
+tasks {
+    val fatJar = register<Jar>("fatJar") {
+        dependsOn.addAll(listOf("compileJava", "compileKotlin", "processResources"))
+        archiveClassifier.set("standalone")
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        manifest { attributes(mapOf("Main-Class" to application.mainClass)) }
+        val sourcesMain = sourceSets.main.get()
+        val contents = configurations.runtimeClasspath.get()
+            .map { if (it.isDirectory) it else zipTree(it) } +
+                sourcesMain.output
+        from(contents)
+    }
+    build {
+        dependsOn(fatJar)
+    }
 }
