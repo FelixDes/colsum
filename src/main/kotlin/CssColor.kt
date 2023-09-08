@@ -11,7 +11,6 @@ data class CssColor(
     companion object {
 
         fun fromHEX(hex: String): CssColor {
-            // Remove '#' symbol from the hex string, if present
             val cleanHex = if (hex.startsWith("#")) {
                 hex.substring(1)
             } else throw IllegalArgumentException("Invalid hex color code: $hex")
@@ -39,7 +38,7 @@ data class CssColor(
                 val alpha = when (cleanHex.length) {
                     4 -> Integer.parseInt(cleanHex.substring(3, 4).repeat(2), 16).toDouble() / 255
                     8 -> Integer.parseInt(cleanHex.substring(6, 8), 16).toDouble() / 255
-                    else -> 1.0 // Default alpha value if not provided
+                    else -> 1.0
                 }
 
                 return CssColor(red, green, blue, round(alpha * 100) / 100)
