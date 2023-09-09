@@ -4,11 +4,15 @@ import color.ConstantColors.Companion.CONSTANT_COLORS
 import translator.nodes.Calculable
 import kotlin.math.abs
 import kotlin.math.round
+import kotlin.math.roundToInt
 
 // TODO("HWB LAB LCH OKLAB OKLCH")
 
 data class CssColor(
-    private val red: Int, private val green: Int, private val blue: Int, private val alpha: Double = 1.0
+    private val red: Int,
+    private val green: Int,
+    private val blue: Int,
+    private val alpha: Double = 1.0
 ) : Calculable<CssColor> {
     companion object {
         fun fromHEX(hex: String): CssColor {
@@ -93,21 +97,20 @@ data class CssColor(
         fun fromConstant(constant: String): CssColor {
             val key = constant.lowercase()
             return CONSTANT_COLORS[key]?.value ?: throw IllegalArgumentException("Incorrect color name: $constant")
-
         }
     }
 
 
     override fun plus(other: CssColor): CssColor {
-        val bgAlpha = (this.alpha)
-        val bgRed = (this.red).toDouble() / 255
-        val bgGreen = (this.green).toDouble() / 255
-        val bgBlue = (this.blue).toDouble() / 255
+        val bgAlpha = this.alpha
+        val bgRed = this.red.toDouble() / 255
+        val bgGreen = this.green.toDouble() / 255
+        val bgBlue = this.blue.toDouble() / 255
 
-        val addingAlpha = (other.alpha)
-        val addingRed = (other.red).toDouble() / 255
-        val addingGreen = (other.green).toDouble() / 255
-        val addingBlue = (other.blue).toDouble() / 255
+        val addingAlpha = other.alpha
+        val addingRed = other.red.toDouble() / 255
+        val addingGreen = other.green.toDouble() / 255
+        val addingBlue = other.blue.toDouble() / 255
 
         val resAlpha = bgAlpha * (1 - addingAlpha) + addingAlpha
         val resRed = bgRed * bgAlpha * (1 - addingAlpha) + addingRed * addingAlpha
@@ -115,7 +118,10 @@ data class CssColor(
         val resBlue = bgBlue * bgAlpha * (1 - addingAlpha) + addingBlue * addingAlpha
 
         return fromRGBA(
-            (resRed * 255).toInt(), (resGreen * 255).toInt(), (resBlue * 255).toInt(), resAlpha
+            (resRed * 255).roundToInt(),
+            (resGreen * 255).roundToInt(),
+            (resBlue * 255).roundToInt(),
+            resAlpha
         )
     }
 
