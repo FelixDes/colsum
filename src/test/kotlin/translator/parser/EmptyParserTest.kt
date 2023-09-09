@@ -1,4 +1,4 @@
-package manual.translator.parser
+package translator.parser
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
@@ -8,9 +8,7 @@ import kotlin.test.assertEquals
 
 class EmptyParserTest {
     @Test
-    fun consumeColor_correct() {
-        // given
-        val parser = Parser.EmptyParser
+    fun consume_correct() {
         // when
         val parserResult = Parser.EmptyParser.consume(0)
         // then

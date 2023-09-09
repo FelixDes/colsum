@@ -1,6 +1,6 @@
-package manual.translator.integrational
+package translator.integrational
 
-import CssColor
+import color.CssColor
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -103,7 +103,6 @@ class ColorFunctionParserTest {
         val parser = FunctionParser.ColorFunctionParser(tokens)
         // when
         val parserResult = parser.consume(0)
-        val color = parserResult.nodeList[0].compute()
         // then
         assertAll(
             { assertEquals(tokens.size, parserResult.posOffset) },

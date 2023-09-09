@@ -1,9 +1,8 @@
 package translator
 
-import CssColor
+import color.CssColor
 import translator.parser.Parser
 import translator.tokenization.Tokenizer
-
 
 fun translate(mainExpression: String, backgroundExpression: String): CssColor {
     val mainTokens = Tokenizer.tokenize(mainExpression)

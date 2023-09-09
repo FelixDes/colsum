@@ -86,10 +86,22 @@ sealed class Parser<ResT : ASTNode<*>>(protected val tokens: List<Pair<TokenType
         tokens: List<Pair<TokenType, String>>,
     ) : Parser<ColorNode>(tokens) {
         override fun consumeDelegate(pos: Int): ParseResult<ColorNode> {
-            if (tokens[pos].first == HEX_COLOR) {
-                return ParseResult(1, listOf(ColorNode(tokens[pos].second)))
+            if (tokens[pos].first == COLOR_HEX) {
+                return ParseResult(1, listOf(ColorNode.nodeForHex(tokens[pos].second)))
             }
-            throw ParseException("No CssColor at pos: $pos")
+            throw ParseException("No color.CssColor at pos: $pos")
+        }
+    }
+
+    // READY TESTED
+    private class ConstColorParser(
+        tokens: List<Pair<TokenType, String>>,
+    ) : Parser<ColorNode>(tokens) {
+        override fun consumeDelegate(pos: Int): ParseResult<ColorNode> {
+            if (tokens[pos].first == COLOR_CONST) {
+                return ParseResult(1, listOf(ColorNode.nodeForConst(tokens[pos].second)))
+            }
+            throw ParseException("No color.CssColor at pos: $pos")
         }
     }
 
@@ -99,7 +111,8 @@ sealed class Parser<ResT : ASTNode<*>>(protected val tokens: List<Pair<TokenType
         override fun consumeDelegate(pos: Int): ParseResult<ColorNode> {
             return AlternativeParser(
                 tokens, listOf(
-                    HexColorParser(tokens) as Parsable<ColorNode>,
+                    HexColorParser(tokens),
+                    ConstColorParser(tokens),
                     FunctionParser.ColorFunctionParser(tokens)
                 )
             ).consume(pos)

@@ -3,19 +3,31 @@ tag-template: 'v$NEXT_PATCH_VERSION'
 categories:
   - title: '✨New Features'
     labels:
-      - 'type:features'
+      - 'features'
 
   - title: '🐛Bugs Fixes'
     labels:
-      - 'type:fix'
+      - 'fix'
 
   - title: '📖Documentation'
     labels:
-      - 'type:documentation'
+      - 'documentation'
 
   - title: '⚙️Configuration'
     labels:
-      - 'type:config'
+      - 'config'
+
+version-resolver:
+  major:
+    labels:
+      - 'major'
+  minor:
+    labels:
+      - 'minor'
+  patch:
+    labels:
+      - 'patch'
+  default: patch
 
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 template: |

@@ -1,4 +1,4 @@
-package manual.translator.parser
+package translator.parser
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
@@ -22,7 +22,7 @@ class WhileSeparatorParserTest {
     )
 
     @Test
-    fun consumeColor_correct() {
+    fun consume_correct() {
         // given
         val tokens = tokenSequence
         val parser = Parser.WhileSeparatorParser(
@@ -47,7 +47,7 @@ class WhileSeparatorParserTest {
     }
 
     @Test
-    fun consumeColor_incorrect() {
+    fun consume_incorrect() {
         // given
         val tokens = tokenSequence
         val parser = Parser.WhileSeparatorParser(tokens, Parser.EmptyParser, Parser.EmptyParser)

@@ -1,0 +1,3 @@
+package translator.integrational
+
+class TranslatorTest
