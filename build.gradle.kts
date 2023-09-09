@@ -14,6 +14,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.5")
     testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0")
+    testImplementation("org.mockito:mockito-core:4.2.0")
+    testImplementation("junit:junit:4.13.2")
 }
 
 tasks.test {
