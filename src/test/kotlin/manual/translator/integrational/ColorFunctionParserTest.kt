@@ -1,4 +1,4 @@
-package translator.integrational
+package manual.translator.integrational
 
 import CssColor
 import org.junit.jupiter.api.assertAll

@@ -1,4 +1,4 @@
-package color
+package manual.color
 
 import CssColor
 import org.junit.jupiter.api.Assertions.assertEquals
