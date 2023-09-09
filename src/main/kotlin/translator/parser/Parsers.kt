@@ -48,13 +48,10 @@ sealed class Parser<ResT : ASTNode<*>>(protected val tokens: List<Pair<TokenType
 
     // READY TESTED
     data object EmptyParser : Parser<EmptyNode>(tokens = listOf()) {
-        override fun consume(pos: Int): ParseResult<EmptyNode> {
-            return consumeDelegate(pos)
-        }
+        override fun consume(pos: Int): ParseResult<EmptyNode> = consumeDelegate(pos)
 
-        override fun consumeDelegate(pos: Int): ParseResult<EmptyNode> {
-            return ParseResult(0, listOf(EmptyNode))
-        }
+
+        override fun consumeDelegate(pos: Int): ParseResult<EmptyNode> = ParseResult(0, listOf(EmptyNode))
     }
 
     // READY TESTED

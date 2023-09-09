@@ -5,9 +5,7 @@ import kotlin.math.roundToInt
 
 class ColorNode private constructor(private var color: Lazy<CssColor>) : ASTNode<CssColor>(),
     Calculable<ColorNode> {
-    override fun compute(): CssColor {
-        return color.value
-    }
+    override fun compute(): CssColor = color.value
 
     companion object {
         fun nodeForHex(hex: String) = ColorNode(lazy { CssColor.fromHEX(hex) })

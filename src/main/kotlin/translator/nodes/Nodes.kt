@@ -35,14 +35,12 @@ sealed class ASTNode<ResT> {
         private val leftNode: ResT,
         private val rightNode: ResT,
     ) : ASTNode<ResT>() {
-        override fun compute(): ResT {
-            return when (operation) {
-                TokenType.OPERATOR_PLUS -> leftNode + rightNode
-                TokenType.OPERATOR_MINUS -> leftNode - rightNode
-                TokenType.OPERATOR_MUL -> leftNode * rightNode
-                TokenType.OPERATOR_DIV -> leftNode / rightNode
-                else -> throw ParseException("Unknown operation: $operation")
-            }
+        override fun compute(): ResT = when (operation) {
+            TokenType.OPERATOR_PLUS -> leftNode + rightNode
+            TokenType.OPERATOR_MINUS -> leftNode - rightNode
+            TokenType.OPERATOR_MUL -> leftNode * rightNode
+            TokenType.OPERATOR_DIV -> leftNode / rightNode
+            else -> throw ParseException("Unknown operation: $operation")
         }
     }
 
@@ -54,8 +52,6 @@ sealed class ASTNode<ResT> {
             val posOffset: Int
         )
 
-        override fun compute(): FunctionRepresentation<FunctionArgT> {
-            return rep
-        }
+        override fun compute(): FunctionRepresentation<FunctionArgT> = rep
     }
 }
