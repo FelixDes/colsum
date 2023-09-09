@@ -7,9 +7,7 @@ sealed class NumberNode private constructor(
     protected val value: Double = 0.0
 ) : ASTNode<Double>(), Calculable<NumberNode> {
 
-    override fun compute(): Double {
-        return value
-    }
+    override fun compute(): Double = value
 
     data object NoneNode : NumberNode(0.0) {
         override fun plus(other: NumberNode): NumberNode {
