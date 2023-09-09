@@ -1,8 +1,9 @@
-package translator.parser
+package manual.translator.parser
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import translator.nodes.ASTNode
+import translator.parser.Parser
 import kotlin.test.assertEquals
 
 class EmptyParserTest {
@@ -11,7 +12,7 @@ class EmptyParserTest {
         // given
         val parser = Parser.EmptyParser
         // when
-        val parserResult = parser.consume(0)
+        val parserResult = Parser.EmptyParser.consume(0)
         // then
         assertAll({ assertEquals(0, parserResult.posOffset) }, {
             assertEquals(

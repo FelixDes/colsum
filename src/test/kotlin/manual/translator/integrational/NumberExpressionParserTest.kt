@@ -1,4 +1,4 @@
-package translator.integrational
+package manual.translator.integrational
 
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.params.ParameterizedTest

@@ -1,8 +1,10 @@
-package translator.parser
+package manual.translator.parser
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import translator.nodes.NumberNode
+import translator.parser.ParseException
+import translator.parser.Parser
 import translator.tokenization.TokenType
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
