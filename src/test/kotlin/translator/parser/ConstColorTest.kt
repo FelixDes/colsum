@@ -1,44 +1,39 @@
-package manual.translator.parser
+package translator.parser
 
+import color.CssColor
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import translator.nodes.NumberNode
-import translator.parser.Parser.*
 import translator.tokenization.TokenType
 import kotlin.test.assertEquals
 
-class AlternativeParserTest {
+class ConstColorTest {
     companion object {
         @JvmStatic
         fun tokenSequence() = listOf(
             Arguments.of(
-                listOf(Pair(TokenType.NUMBER, "13")),
-                NumberNode.buildNumber(13.0)
+                listOf(Pair(TokenType.COLOR_CONST, "aqua")),
+                CssColor.fromConstant("aqua")
             ),
             Arguments.of(
-                listOf(Pair(TokenType.NUMBER_NONE, "none")),
-                NumberNode.buildNone()
+                listOf(Pair(TokenType.COLOR_CONST, "wheat")),
+                CssColor.fromConstant("wheat")
             )
         )
     }
 
     @ParameterizedTest
     @MethodSource("tokenSequence")
-    fun consumeColor_correct(tokens: List<Pair<TokenType, String>>, node: NumberNode) {
+    fun consume_correct(tokens: List<Pair<TokenType, String>>, color: CssColor) {
         // given
-        val parser = AlternativeParser(
-            tokens, listOf(
-                NumberParser(tokens), NoneParser(tokens)
-            )
-        )
+        val parser = Parser.ColorParser(tokens)
         // when
         val parserResult = parser.consume(0)
         // then
         assertAll({ assertEquals(1, parserResult.posOffset) }, {
             assertEquals(
-                node.compute(),
+                color,
                 parserResult.nodeList[0].compute()
             )
         })

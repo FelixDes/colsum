@@ -1,4 +1,4 @@
-package manual.translator.parser
+package translator.parser
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
@@ -15,7 +15,7 @@ class NoneParserTest {
     )
 
     @Test
-    fun consumeColor_correct() {
+    fun consume_correct() {
         // given
         val tokens = tokenSequence
         val parser = Parser.NoneParser(tokens)

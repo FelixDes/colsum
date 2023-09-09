@@ -1,20 +1,18 @@
 package translator.nodes
 
-import CssColor
+import color.CssColor
 import kotlin.math.roundToInt
 
 class ColorNode private constructor(private var color: Lazy<CssColor>) : ASTNode<CssColor>(),
     Calculable<ColorNode> {
-
-    constructor(name: String, args: List<NumberNode>) : this(lazy { fromFunction(name, args) })
-    constructor(hex: String) : this(lazy { fromHex(hex) })
-
     override fun compute(): CssColor {
         return color.value
     }
 
     companion object {
-        private fun fromHex(hex: String) = CssColor.fromHEX(hex)
+        fun nodeForHex(hex: String) = ColorNode(lazy { CssColor.fromHEX(hex) })
+        fun nodeForConst(const: String) = ColorNode(lazy { CssColor.fromConstant(const) })
+        fun nodeForFunction(name: String, args: List<NumberNode>) = ColorNode(lazy { fromFunction(name, args) })
 
         private fun fromFunction(name: String, args: List<NumberNode>): CssColor {
             return when (name) {
@@ -32,7 +30,7 @@ class ColorNode private constructor(private var color: Lazy<CssColor>) : ASTNode
 //                    val l: Int = parse_None_Double_Percent_numberArg(args[2])
 //                    val a: Int = if (args.size == 4) parseAlpha(args[3]) else 0
 //
-//                    CssColor.fromHSLA(red, green, blue, alpha)
+//                    color.CssColor.fromHSLA(red, green, blue, alpha)
 //                }
                 else -> throw SemanticException("Unknown function: $name")
             }

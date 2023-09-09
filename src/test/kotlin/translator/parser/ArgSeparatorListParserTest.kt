@@ -1,4 +1,4 @@
-package manual.translator.parser
+package translator.parser
 
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.params.ParameterizedTest
@@ -35,7 +35,7 @@ class ArgSeparatorListParserTest {
 
     @ParameterizedTest
     @MethodSource("tokenSequence")
-    fun consumeColor_correct(tokens: List<Pair<TokenType, String>>, nodes: List<NumberNode>) {
+    fun consume_correct(tokens: List<Pair<TokenType, String>>, nodes: List<NumberNode>) {
         // given
         val parser = Parser.ArgSeparatorListParser(
             tokens, Parser.NumberParser(tokens), listOf(

@@ -1,4 +1,4 @@
-package manual.translator.tokenizer
+package translator.tokenizer
 
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -37,7 +37,7 @@ class TokenizerTest {
                         Pair(TokenType.NUMBER, "4"),
                         Pair(TokenType.PARENTHESIS_CLOSE, ")"),
                         Pair(TokenType.OPERATOR_MINUS, "-"),
-                        Pair(TokenType.HEX_COLOR, "#009900"),
+                        Pair(TokenType.COLOR_HEX, "#009900"),
                     )
                 ),
                 Arguments.of(

@@ -1,20 +1,18 @@
-package manual.translator.parser
+package translator.parser
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import translator.nodes.ColorNode
-import translator.parser.ParseException
-import translator.parser.Parser
 import translator.tokenization.TokenType
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class HexColorParserTest {
     private fun tokenSequence() = listOf(
-        Pair(TokenType.HEX_COLOR, "#009"),
-        Pair(TokenType.HEX_COLOR, "#0099"),
-        Pair(TokenType.HEX_COLOR, "#009900"),
-        Pair(TokenType.HEX_COLOR, "#00990011")
+        Pair(TokenType.COLOR_HEX, "#009"),
+        Pair(TokenType.COLOR_HEX, "#0099"),
+        Pair(TokenType.COLOR_HEX, "#009900"),
+        Pair(TokenType.COLOR_HEX, "#00990011")
     )
 
     @Test
@@ -28,7 +26,7 @@ class HexColorParserTest {
             // then
             assertAll(
                 { assertEquals(1, parserResult.posOffset) },
-                { assertEquals(ColorNode(tokenPair.second).compute(), parserResult.nodeList[0].compute()) }
+                { assertEquals(ColorNode.nodeForHex(tokenPair.second).compute(), parserResult.nodeList[0].compute()) }
             )
         }
     }

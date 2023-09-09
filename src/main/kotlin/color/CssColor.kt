@@ -1,3 +1,6 @@
+package color
+
+import color.ConstantColors.Companion.CONSTANT_COLORS
 import translator.nodes.Calculable
 import kotlin.math.abs
 import kotlin.math.round
@@ -7,9 +10,7 @@ import kotlin.math.round
 data class CssColor(
     private val red: Int, private val green: Int, private val blue: Int, private val alpha: Double = 1.0
 ) : Calculable<CssColor> {
-
     companion object {
-
         fun fromHEX(hex: String): CssColor {
             val cleanHex = if (hex.startsWith("#")) {
                 hex.substring(1)
@@ -87,6 +88,12 @@ data class CssColor(
                 in 300..<360 -> res(c, 0.0, x)
                 else -> throw IllegalStateException("Incorrect hue: $hue_")
             }
+        }
+
+        fun fromConstant(constant: String): CssColor {
+            val key = constant.lowercase()
+            return CONSTANT_COLORS[key]?.value ?: throw IllegalArgumentException("Incorrect color name: $constant")
+
         }
     }
 

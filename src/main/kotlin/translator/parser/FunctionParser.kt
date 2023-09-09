@@ -111,7 +111,7 @@ internal sealed class FunctionParser<ResT : ASTNode<*>, ArgT : ASTNode<*>>(
                 funcArgParsers
             ).consume(pos).nodeList[0].compute()
 
-            val func = ColorNode(rep.name, rep.argNodes)
+            val func = ColorNode.nodeForFunction(rep.name, rep.argNodes)
             return ParseResult(rep.posOffset, listOf(func))
         }
     }

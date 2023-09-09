@@ -1,5 +1,9 @@
+import org.jetbrains.kotlin.gradle.targets.js.internal.filterClassName
+import org.jetbrains.kotlin.ir.backend.js.findClass
+
 plugins {
     kotlin("jvm") version "1.9.0"
+    id("org.jetbrains.kotlinx.kover") version "0.7.3"
     application
 }
 
@@ -13,9 +17,9 @@ repositories {
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.5")
     testImplementation(kotlin("test"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0")
     testImplementation("org.mockito:mockito-core:4.2.0")
-    testImplementation("junit:junit:4.13.2")
 }
 
 tasks.test {
@@ -44,5 +48,13 @@ tasks {
     }
     build {
         dependsOn(fatJar)
+    }
+}
+
+koverReport {
+    filters {
+        excludes {
+            classes("*ConstantColors*")
+        }
     }
 }
