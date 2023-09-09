@@ -17,10 +17,10 @@ class ColorNode private constructor(private var color: Lazy<CssColor>) : ASTNode
         private fun fromFunction(name: String, args: List<NumberNode>): CssColor {
             return when (name) {
                 "rgb", "rgba" -> {
-                    val red: Int = parse_None_Double_Percent_numberArg(args[0])
-                    val green: Int = parse_None_Double_Percent_numberArg(args[1])
-                    val blue: Int = parse_None_Double_Percent_numberArg(args[2])
-                    val alpha: Double = if (args.size == 4) parseAlpha(args[3]) else 0.0
+                    val red: Int = parseNoneDoublePercentNumberArg(args[0])
+                    val green: Int = parseNoneDoublePercentNumberArg(args[1])
+                    val blue: Int = parseNoneDoublePercentNumberArg(args[2])
+                    val alpha: Double = if (args.size == 4) parseAlpha(args[3]) else 1.0
 
                     CssColor.fromRGBA(red, green, blue, alpha)
                 }
@@ -36,7 +36,7 @@ class ColorNode private constructor(private var color: Lazy<CssColor>) : ASTNode
             }
         }
 
-        private fun parse_None_Double_Percent_numberArg(arg: NumberNode) =
+        private fun parseNoneDoublePercentNumberArg(arg: NumberNode) =
             when (arg) {
                 is NumberNode.NoneNode -> arg.compute().roundToInt()
                 is NumberNode.DoubleNode -> arg.compute().roundToInt()
