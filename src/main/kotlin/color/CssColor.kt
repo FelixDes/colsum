@@ -59,45 +59,46 @@ data class CssColor(
         }
 
         fun fromHSLA(
-            hue_: Int, saturation_: Int, lightness_: Int, alpha: Double = 1.0
+            hue: Int, saturation: Int, lightness: Int, alpha: Double = 1.0
         ): CssColor {
-            require(saturation_ in 0..100)
-            require(lightness_ in 0..100)
+            require(saturation in 0..100)
+            require(lightness in 0..100)
             require(alpha in 0.0..1.0)
 
-            val saturation = saturation_.toDouble() / 100
-            val lightness = lightness_.toDouble() / 100
+            val satValidated = saturation.toDouble() / 100
+            val lightnessValidated = lightness.toDouble() / 100
 
-            val hue = when {
-                hue_ >= 0 -> hue_ % 360
-                else -> 360 - hue_ % 360
+            val hueValidated = when {
+                hue >= 0 -> hue % 360
+                else -> 360 - hue % 360
             }
 
-            val c = saturation * (1 - abs(2 * lightness - 1))
-            val x = c * (1 - abs((hue.toDouble() / 60) % 2 - 1))
-            val m = lightness - c / 2
+            val c = satValidated * (1 - abs(2 * lightnessValidated - 1))
+            val x = c * (1 - abs((hueValidated.toDouble() / 60) % 2 - 1))
+            val m = lightnessValidated - c / 2
 
-            fun res(red: Double, green: Double, blue: Double): CssColor {
-                return fromRGBA(
-                    ((red + m) * 255).toInt(), ((green + m) * 255).toInt(), ((blue + m) * 255).toInt(), alpha
+            fun res(red: Double, green: Double, blue: Double): CssColor =
+                fromRGBA(
+                    ((red + m) * 255).toInt(),
+                    ((green + m) * 255).toInt(),
+                    ((blue + m) * 255).toInt(),
+                    alpha
                 )
-            }
 
-            return when (hue) {
+
+            return when (hueValidated) {
                 in 0..<60 -> res(c, x, 0.0)
                 in 60..<120 -> res(x, c, 0.0)
                 in 120..<180 -> res(0.0, c, x)
                 in 180..<240 -> res(0.0, x, c)
                 in 240..<300 -> res(x, 0.0, c)
                 in 300..<360 -> res(c, 0.0, x)
-                else -> throw IllegalStateException("Incorrect hue: $hue_")
+                else -> throw IllegalStateException("Incorrect hue: $hueValidated")
             }
         }
 
-        fun fromConstant(constant: String): CssColor {
-            val key = constant.lowercase()
-            return CONSTANT_COLORS[key]?.value ?: throw IllegalArgumentException("Incorrect color name: $constant")
-        }
+        fun fromConstant(constant: String): CssColor = CONSTANT_COLORS[constant.lowercase()]?.value
+            ?: throw IllegalArgumentException("Incorrect color name: $constant")
     }
 
 

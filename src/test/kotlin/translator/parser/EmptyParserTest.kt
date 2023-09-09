@@ -3,7 +3,6 @@ package translator.parser
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import translator.nodes.ASTNode
-import translator.parser.Parser
 import kotlin.test.assertEquals
 
 class EmptyParserTest {
