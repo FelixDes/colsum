@@ -1,0 +1,19 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⚡️Checkout
+        uses: actions/checkout@v3
+      - name: 🐘Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      - name: 🍻Gradle build
+        run: ./gradlew build
+#      - name: 🚀Upload artifact
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: Desktop JAR (zipped)
+#          path: desktop/build/libs/Mindustry.jar
