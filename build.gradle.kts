@@ -31,7 +31,7 @@ application {
 }
 
 tasks {
-    val fatJar = register<Jar>("fatJar") {
+    val fatJar = register<Jar>("executableJar") {
         dependsOn.addAll(listOf("compileJava", "compileKotlin", "processResources"))
         archiveClassifier.set("executable")
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
