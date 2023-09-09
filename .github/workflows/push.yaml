@@ -1,9 +1,9 @@
-name: CI
+name: Test
 
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 jobs:
-  build:
+  build_and_test:
     runs-on: ubuntu-latest
     steps:
       - name: ⚡️Checkout
@@ -11,9 +11,10 @@ jobs:
       - name: 🐘Setup Gradle
         uses: gradle/gradle-build-action@v2
       - name: 🍻Gradle build
-        run: ./gradlew build
+        run: ./gradlew test executableJar
 #      - name: 🚀Upload artifact
-#        uses: actions/upload-artifact@v2
+#        uses: actions/upload-artifact@v3
 #        with:
-#          name: Desktop JAR (zipped)
-#          path: desktop/build/libs/Mindustry.jar
+#          name: JAR
+#          path: build/libs/*-executable.jar
+#          retention-days: 1
