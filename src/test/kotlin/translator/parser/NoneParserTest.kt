@@ -3,13 +3,13 @@ package translator.parser
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import translator.nodes.NumberNode
-import translator.tokenization.TokenType
+import translator.tokenization.TokenType.NUMBER_NONE
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class NoneParserTest {
     private val tokenSequence = listOf(
-        Pair(TokenType.NUMBER_NONE, "none"),
+        NUMBER_NONE to "none",
     )
 
     @Test

@@ -3,20 +3,20 @@ package translator.parser
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import translator.nodes.NumberNode
-import translator.tokenization.TokenType
+import translator.tokenization.TokenType.*
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class WhileSeparatorParserTest {
     private val tokenSequence = listOf(
-        Pair(TokenType.FUN_NAME, "rgb"),
-        Pair(TokenType.PARENTHESIS_OPEN, "("),
-        Pair(TokenType.NUMBER, "1"),
-        Pair(TokenType.COMMA_SEPARATOR, ", "),
-        Pair(TokenType.NUMBER, "2"),
-        Pair(TokenType.COMMA_SEPARATOR, ", "),
-        Pair(TokenType.NUMBER, "3"),
-        Pair(TokenType.PARENTHESIS_CLOSE, ")"),
+        FUN_NAME to "rgb",
+        PARENTHESIS_OPEN to "(",
+        NUMBER to "1",
+        COMMA_SEPARATOR to ", ",
+        NUMBER to "2",
+        COMMA_SEPARATOR to ", ",
+        NUMBER to "3",
+        PARENTHESIS_CLOSE to ")",
     )
 
     @Test
@@ -26,7 +26,7 @@ class WhileSeparatorParserTest {
         val parser = Parser.WhileSeparatorParser(
             tokens,
             Parser.NumberParser(tokens),
-            Parser.SingleTokenParser(tokens, TokenType.COMMA_SEPARATOR)
+            Parser.SingleTokenParser(tokens, COMMA_SEPARATOR)
         )
         for (tokenPair in tokens) {
             // when
@@ -38,7 +38,7 @@ class WhileSeparatorParserTest {
                         NumberNode.buildNumber(1.0).compute(),
                         NumberNode.buildNumber(2.0).compute(),
                         NumberNode.buildNumber(3.0).compute(),
-                    ), parserResult.nodeList.map { o -> o.compute() }
+                    ), parserResult.nodeList.map { it.compute() }
                 )
             })
         }

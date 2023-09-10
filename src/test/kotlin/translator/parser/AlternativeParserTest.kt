@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.MethodSource
 import translator.nodes.NumberNode
 import translator.parser.Parser.*
 import translator.tokenization.TokenType
+import translator.tokenization.TokenType.*
 import kotlin.test.assertEquals
 
 class AlternativeParserTest {
@@ -14,11 +15,11 @@ class AlternativeParserTest {
         @JvmStatic
         fun tokenSequence() = listOf(
             Arguments.of(
-                listOf(Pair(TokenType.NUMBER, "13")),
+                listOf(NUMBER to "13"),
                 NumberNode.buildNumber(13.0)
             ),
             Arguments.of(
-                listOf(Pair(TokenType.NUMBER_NONE, "none")),
+                listOf(NUMBER_NONE to "none"),
                 NumberNode.buildNone()
             )
         )

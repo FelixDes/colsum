@@ -6,6 +6,7 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import translator.nodes.NumberNode
 import translator.tokenization.TokenType
+import translator.tokenization.TokenType.*
 import kotlin.test.assertEquals
 
 class ArgSeparatorListParserTest {
@@ -14,14 +15,14 @@ class ArgSeparatorListParserTest {
         fun tokenSequence() = listOf(
             Arguments.of(
                 listOf(
-                    Pair(TokenType.FUN_NAME, "function"),
-                    Pair(TokenType.PARENTHESIS_OPEN, "("),
-                    Pair(TokenType.NUMBER, "2"),
-                    Pair(TokenType.COMMA_SEPARATOR, ", "),
-                    Pair(TokenType.NUMBER, "3"),
-                    Pair(TokenType.SLASH_SEPARATOR, " / "),
-                    Pair(TokenType.NUMBER, "5"),
-                    Pair(TokenType.PARENTHESIS_CLOSE, ")"),
+                    FUN_NAME to "function",
+                    PARENTHESIS_OPEN to "(",
+                    NUMBER to "2",
+                    COMMA_SEPARATOR to ", ",
+                    NUMBER to "3",
+                    SLASH_SEPARATOR to " / ",
+                    NUMBER to "5",
+                    PARENTHESIS_CLOSE to ")",
                 ),
                 listOf(
                     NumberNode.buildNumber(2.0),
@@ -38,8 +39,8 @@ class ArgSeparatorListParserTest {
         // given
         val parser = Parser.ArgSeparatorListParser(
             tokens, Parser.NumberParser(tokens), listOf(
-                Parser.SingleTokenParser(tokens, TokenType.COMMA_SEPARATOR),
-                Parser.SingleTokenParser(tokens, TokenType.SLASH_SEPARATOR),
+                Parser.SingleTokenParser(tokens, COMMA_SEPARATOR),
+                Parser.SingleTokenParser(tokens, SLASH_SEPARATOR),
             )
         )
         // when

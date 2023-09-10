@@ -2,19 +2,19 @@ package translator.parser
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import translator.tokenization.TokenType
+import translator.tokenization.TokenType.*
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class ParenthesisWrapperParserTest {
     private val tokenSequence = listOf(
-        Pair(TokenType.PARENTHESIS_OPEN, "("),
-        Pair(TokenType.NUMBER, "2"),
-        Pair(TokenType.COMMA_SEPARATOR, ","),
-        Pair(TokenType.NUMBER, "3"),
-        Pair(TokenType.COMMA_SEPARATOR, ","),
-        Pair(TokenType.NUMBER, "4"),
-        Pair(TokenType.PARENTHESIS_CLOSE, ")"),
+        PARENTHESIS_OPEN to "(",
+        NUMBER to "2",
+        COMMA_SEPARATOR to ",",
+        NUMBER to "3",
+        COMMA_SEPARATOR to ",",
+        NUMBER to "4",
+        PARENTHESIS_CLOSE to ")",
     )
 
     @Test
@@ -24,7 +24,7 @@ class ParenthesisWrapperParserTest {
         val innerParser = Parser.WhileSeparatorParser(
             tokens,
             Parser.NumberParser(tokens),
-            Parser.SingleTokenParser(tokens, TokenType.COMMA_SEPARATOR)
+            Parser.SingleTokenParser(tokens, COMMA_SEPARATOR)
         )
         val parser = Parser.ParenthesisWrapperParser(tokens, innerParser)
         // when
@@ -43,7 +43,7 @@ class ParenthesisWrapperParserTest {
         val innerParser = Parser.WhileSeparatorParser(
             tokens,
             Parser.NumberParser(tokens),
-            Parser.SingleTokenParser(tokens, TokenType.COMMA_SEPARATOR)
+            Parser.SingleTokenParser(tokens, COMMA_SEPARATOR)
         )
         val parser = Parser.ParenthesisWrapperParser(tokens, innerParser)
 
