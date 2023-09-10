@@ -3,18 +3,18 @@ package translator.parser
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import translator.nodes.ASTNode
-import translator.tokenization.TokenType
+import translator.tokenization.TokenType.*
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class SingleTokenParserTest {
-    private val tokenSequence = listOf(Pair(TokenType.PARENTHESIS_OPEN, "("))
+    private val tokenSequence = listOf(PARENTHESIS_OPEN to "(")
 
     @Test
     fun consume_correct() {
         // given
         val tokens = tokenSequence
-        val parser = Parser.SingleTokenParser(tokens, TokenType.PARENTHESIS_OPEN)
+        val parser = Parser.SingleTokenParser(tokens,PARENTHESIS_OPEN)
         // when
         val parserResult = parser.consume(0)
         // then
@@ -26,7 +26,7 @@ class SingleTokenParserTest {
     fun consume_incorrect() {
         // given
         val tokens = tokenSequence
-        val parser = Parser.SingleTokenParser(tokens, TokenType.PARENTHESIS_OPEN)
+        val parser = Parser.SingleTokenParser(tokens, PARENTHESIS_OPEN)
         // when + then
         assertFailsWith<ParseException> { parser.consume(-1) }
     }

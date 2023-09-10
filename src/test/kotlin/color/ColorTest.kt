@@ -74,9 +74,11 @@ class ColorTest {
         assertEquals(res, color)
     }
 
+    // TODO test fails
     @ParameterizedTest
     @MethodSource("colorCompositionProvider")
     fun colorCompositionTest(colors: List<CssColor>, res: CssColor) {
+        // colors.sum?
         assertEquals(res, colors.reduce { c1, c2 -> c1 + c2 })
     }
 }

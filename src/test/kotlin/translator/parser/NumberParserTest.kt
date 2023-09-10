@@ -6,6 +6,7 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import translator.nodes.NumberNode
 import translator.tokenization.TokenType
+import translator.tokenization.TokenType.*
 import kotlin.test.assertEquals
 
 class NumberParserTest {
@@ -13,56 +14,56 @@ class NumberParserTest {
         @JvmStatic
         fun tokenSequence() = listOf(
             Arguments.of(
-                listOf(Pair(TokenType.NUMBER, "1")),
+                listOf(NUMBER to "1"),
                 NumberNode.buildNumber("1")
             ),
             Arguments.of(
-                listOf(Pair(TokenType.NUMBER_PERCENT, "1%")),
+                listOf(NUMBER_PERCENT to "1%"),
                 NumberNode.buildPercent("1%")
             ),
             Arguments.of(
-                listOf(Pair(TokenType.NUMBER, "-1")),
+                listOf(NUMBER to "-1"),
                 NumberNode.buildNumber("-1")
             ),
             Arguments.of(
-                listOf(Pair(TokenType.NUMBER_PERCENT, "-1%")),
+                listOf(NUMBER_PERCENT to "-1%"),
                 NumberNode.buildPercent("-1%")
             ),
             Arguments.of(
-                listOf(Pair(TokenType.NUMBER, "-2.01")),
+                listOf(NUMBER to "-2.01"),
                 NumberNode.buildNumber("-2.01")
             ),
             Arguments.of(
-                listOf(Pair(TokenType.NUMBER_PERCENT, "-2.01%")),
+                listOf(NUMBER_PERCENT to "-2.01%"),
                 NumberNode.buildPercent("-2.01%")
             ),
             Arguments.of(
-                listOf(Pair(TokenType.NUMBER, "1.6e-5")),
+                listOf(NUMBER to "1.6e-5"),
                 NumberNode.buildNumber("1.6e-5")
             ),
             Arguments.of(
-                listOf(Pair(TokenType.NUMBER_PERCENT, "1.6e-5%")),
+                listOf(NUMBER_PERCENT to "1.6e-5%"),
                 NumberNode.buildPercent("1.6e-5%")
             ),
             Arguments.of(
-                listOf(Pair(TokenType.NUMBER_PI, "pi")),
-                NumberNode.buildSpecific(TokenType.NUMBER_PI)
+                listOf(NUMBER_PI to "pi"),
+                NumberNode.buildSpecific(NUMBER_PI)
             ),
             Arguments.of(
-                listOf(Pair(TokenType.NUMBER_EXP, "e")),
-                NumberNode.buildSpecific(TokenType.NUMBER_EXP)
+                listOf(NUMBER_EXP to "e"),
+                NumberNode.buildSpecific(NUMBER_EXP)
             ),
             Arguments.of(
-                listOf(Pair(TokenType.NUMBER_NAN, "NaN")),
-                NumberNode.buildSpecific(TokenType.NUMBER_NAN)
+                listOf(NUMBER_NAN to "NaN"),
+                NumberNode.buildSpecific(NUMBER_NAN)
             ),
             Arguments.of(
-                listOf(Pair(TokenType.NUMBER_POS_INF, "infinity")),
-                NumberNode.buildSpecific(TokenType.NUMBER_POS_INF)
+                listOf(NUMBER_POS_INF to "infinity"),
+                NumberNode.buildSpecific(NUMBER_POS_INF)
             ),
             Arguments.of(
-                listOf(Pair(TokenType.NUMBER_NEG_INF, "-infinity")),
-                NumberNode.buildSpecific(TokenType.NUMBER_NEG_INF)
+                listOf(NUMBER_NEG_INF to "-infinity"),
+                NumberNode.buildSpecific(NUMBER_NEG_INF)
             ),
         )
     }
