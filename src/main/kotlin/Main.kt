@@ -10,7 +10,7 @@ fun main(args: Array<String>) {
         ArgType.String,
         shortName = "e",
         fullName = "expression",
-        description = "String for computation"
+        description = "Expression for computation"
     ).required()
     val backgroundColor by parser.option(
         ArgType.String,
@@ -20,5 +20,5 @@ fun main(args: Array<String>) {
     ).default("#FFF")
     parser.parse(args)
 
-    println(translate(mainExpression, backgroundColor).toString())
+    println(translate(mainExpression, backgroundColor))
 }

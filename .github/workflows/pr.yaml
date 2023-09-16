@@ -1,0 +1,50 @@
+name: Verify PR labels
+
+on:
+  pull_request:
+    types: [ opened, labeled, unlabeled, synchronize ]
+
+jobs:
+  label_check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: zwaldowski/match-label-action@v2
+        with:
+          allowed: fix, features, documentation, config
+
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⚡️Checkout
+        uses: actions/checkout@v3
+      - name: 🐘Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      - name: 🍻Gradle build
+        run: ./gradlew test executableJar
+    #      - name: 🚀Upload artifact
+    #        uses: actions/upload-artifact@v3
+    #        with:
+    #          name: JAR
+    #          path: build/libs/*-executable.jar
+    #          retention-days: 1
+  kover_report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⚡️Checkout
+        uses: actions/checkout@v3
+      - name: 🐘Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      - name: 📑Generate kover coverage report
+        run: ./gradlew koverXmlReport
+      - name: ➕Add coverage report to PR
+        id: kover
+        uses: mi-kas/kover-report@v1
+        with:
+          path: |
+            ${{ github.workspace }}/colsum/build/reports/kover/report.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: Code Coverage
+          update-comment: true
+          min-coverage-overall: 60
+          min-coverage-changed-files: 60
+          coverage-counter-type: LINE

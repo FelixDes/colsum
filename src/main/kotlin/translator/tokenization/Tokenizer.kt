@@ -2,7 +2,7 @@ package translator.tokenization
 
 import kotlin.math.min
 
-class TokenizerException(message: String) : Exception(message)
+class TokenizerException(message: String) : RuntimeException(message)
 
 class Tokenizer {
     companion object {
@@ -22,12 +22,7 @@ class Tokenizer {
                 }
                 if (match == null) {
                     throw TokenizerException(
-                        "Unknown token sequence for: ${
-                            input.substring(
-                                0,
-                                min(input.length, 10)
-                            )
-                        }..."
+                        "Unknown token sequence for: ${input.substring(0, min(input.length, 10))}"
                     )
                 }
             }

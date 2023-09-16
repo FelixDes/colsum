@@ -1,3 +1,5 @@
+package color
+
 import translator.nodes.Calculable
 import kotlin.math.abs
 import kotlin.math.round
@@ -5,11 +7,12 @@ import kotlin.math.round
 // TODO("HWB LAB LCH OKLAB OKLCH")
 
 data class CssColor(
-    private val red: Int, private val green: Int, private val blue: Int, private val alpha: Double = 1.0
+    private val red: Int,
+    private val green: Int,
+    private val blue: Int,
+    private val alpha: Double = 1.0
 ) : Calculable<CssColor> {
-
     companion object {
-
         fun fromHEX(hex: String): CssColor {
             val cleanHex = if (hex.startsWith("#")) {
                 hex.substring(1)
@@ -48,59 +51,65 @@ data class CssColor(
         }
 
         fun fromRGBA(
-            red: Int, green: Int, blue: Int, alpha: Double = 1.0
-        ): CssColor {
-            return CssColor(red, green, blue, alpha)
-        }
+            red: Int,
+            green: Int,
+            blue: Int,
+            alpha: Double = 1.0
+        ): CssColor = CssColor(red, green, blue, alpha)
 
         fun fromHSLA(
-            hue_: Int, saturation_: Int, lightness_: Int, alpha: Double = 1.0
+            hue: Int, saturation: Int, lightness: Int, alpha: Double = 1.0
         ): CssColor {
-            require(saturation_ in 0..100)
-            require(lightness_ in 0..100)
+            require(saturation in 0..100)
+            require(lightness in 0..100)
             require(alpha in 0.0..1.0)
 
-            val saturation = saturation_.toDouble() / 100
-            val lightness = lightness_.toDouble() / 100
+            val satValidated = saturation.toDouble() / 100
+            val lightnessValidated = lightness.toDouble() / 100
 
-            val hue = when {
-                hue_ >= 0 -> hue_ % 360
-                else -> 360 - hue_ % 360
+            val hueValidated = when {
+                hue >= 0 -> hue % 360
+                else -> 360 - hue % 360
             }
 
-            val c = saturation * (1 - abs(2 * lightness - 1))
-            val x = c * (1 - abs((hue.toDouble() / 60) % 2 - 1))
-            val m = lightness - c / 2
+            val c = satValidated * (1 - abs(2 * lightnessValidated - 1))
+            val x = c * (1 - abs((hueValidated.toDouble() / 60) % 2 - 1))
+            val m = lightnessValidated - c / 2
 
-            fun res(red: Double, green: Double, blue: Double): CssColor {
-                return fromRGBA(
-                    ((red + m) * 255).toInt(), ((green + m) * 255).toInt(), ((blue + m) * 255).toInt(), alpha
+            fun res(red: Double, green: Double, blue: Double): CssColor =
+                fromRGBA(
+                    ((red + m) * 255).toInt(),
+                    ((green + m) * 255).toInt(),
+                    ((blue + m) * 255).toInt(),
+                    alpha
                 )
-            }
 
-            return when (hue) {
+
+            return when (hueValidated) {
                 in 0..<60 -> res(c, x, 0.0)
                 in 60..<120 -> res(x, c, 0.0)
                 in 120..<180 -> res(0.0, c, x)
                 in 180..<240 -> res(0.0, x, c)
                 in 240..<300 -> res(x, 0.0, c)
                 in 300..<360 -> res(c, 0.0, x)
-                else -> throw IllegalStateException("Incorrect hue: $hue_")
+                else -> throw IllegalStateException("Incorrect hue: $hueValidated")
             }
         }
+
+        fun fromConstant(constant: String): CssColor = ConstantColorsService[constant.lowercase()]
     }
 
 
     override fun plus(other: CssColor): CssColor {
-        val bgAlpha = (this.alpha)
-        val bgRed = (this.red).toDouble() / 255
-        val bgGreen = (this.green).toDouble() / 255
-        val bgBlue = (this.blue).toDouble() / 255
+        val bgAlpha = this.alpha
+        val bgRed = this.red.toDouble() / 255
+        val bgGreen = this.green.toDouble() / 255
+        val bgBlue = this.blue.toDouble() / 255
 
-        val addingAlpha = (other.alpha)
-        val addingRed = (other.red).toDouble() / 255
-        val addingGreen = (other.green).toDouble() / 255
-        val addingBlue = (other.blue).toDouble() / 255
+        val addingAlpha = other.alpha
+        val addingRed = other.red.toDouble() / 255
+        val addingGreen = other.green.toDouble() / 255
+        val addingBlue = other.blue.toDouble() / 255
 
         val resAlpha = bgAlpha * (1 - addingAlpha) + addingAlpha
         val resRed = bgRed * bgAlpha * (1 - addingAlpha) + addingRed * addingAlpha
@@ -108,23 +117,20 @@ data class CssColor(
         val resBlue = bgBlue * bgAlpha * (1 - addingAlpha) + addingBlue * addingAlpha
 
         return fromRGBA(
-            (resRed * 255).toInt(), (resGreen * 255).toInt(), (resBlue * 255).toInt(), resAlpha
+            (resRed * 255).toInt(),
+            (resGreen * 255).toInt(),
+            (resBlue * 255).toInt(),
+            resAlpha
         )
     }
 
-    override fun minus(other: CssColor): CssColor {
-        TODO("Not yet implemented")
-    }
+    override fun minus(other: CssColor): CssColor = throw UnsupportedOperationException()
 
-    override fun div(other: CssColor): CssColor {
-        TODO("Not yet implemented")
-    }
+    override fun div(other: CssColor): CssColor = throw UnsupportedOperationException()
 
-    override fun times(other: CssColor): CssColor {
-        TODO("Not yet implemented")
-    }
+    override fun times(other: CssColor): CssColor = throw UnsupportedOperationException()
 
-    override fun toString(): String {
-        return "rgba($red, $green, $blue, $alpha)"
-    }
+    override fun toString(): String = "rgba($red, $green, $blue, $alpha)"
 }
+
+fun List<CssColor>.sum(): CssColor = this.reduce { c1, c2 -> c1 + c2 }

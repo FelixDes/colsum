@@ -1,20 +1,18 @@
-package manual.translator.parser
+package translator.parser
 
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.assertAll
 import translator.nodes.ASTNode
-import translator.parser.Parser
 import kotlin.test.assertEquals
 
-class EmptyParserTest {
+class EmptyParserTest : AnnotationSpec() {
     @Test
-    fun consumeColor_correct() {
-        // given
-        val parser = Parser.EmptyParser
+    fun consume_correct() {
         // when
         val parserResult = Parser.EmptyParser.consume(0)
         // then
-        assertAll({ assertEquals(0, parserResult.posOffset) }, {
+        assertAll({ 0 shouldBe parserResult.posOffset }, {
             assertEquals(
                 ASTNode.EmptyNode, parserResult.nodeList[0]
             )

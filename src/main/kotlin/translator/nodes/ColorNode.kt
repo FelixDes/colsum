@@ -1,28 +1,27 @@
 package translator.nodes
 
-import CssColor
+import color.CssColor
+import translator.nodes.NumberNode.*
+import translator.nodes.SemanticException.CODE.ALPHA_ARGUMENT_ERROR
+import translator.nodes.SemanticException.CODE.UNKNOWN_FUNCTION
 import kotlin.math.roundToInt
 
 class ColorNode private constructor(private var color: Lazy<CssColor>) : ASTNode<CssColor>(),
     Calculable<ColorNode> {
-
-    constructor(name: String, args: List<NumberNode>) : this(lazy { fromFunction(name, args) })
-    constructor(hex: String) : this(lazy { fromHex(hex) })
-
-    override fun compute(): CssColor {
-        return color.value
-    }
+    override fun compute(): CssColor = color.value
 
     companion object {
-        private fun fromHex(hex: String) = CssColor.fromHEX(hex)
+        fun nodeForHex(hex: String) = ColorNode(lazy { CssColor.fromHEX(hex) })
+        fun nodeForConst(const: String) = ColorNode(lazy { CssColor.fromConstant(const) })
+        fun nodeForFunction(name: String, args: List<NumberNode>) = ColorNode(lazy { fromFunction(name, args) })
 
-        private fun fromFunction(name: String, args: List<NumberNode>): CssColor {
-            return when (name) {
+        private fun fromFunction(name: String, args: List<NumberNode>): CssColor =
+            when (name) {
                 "rgb", "rgba" -> {
-                    val red: Int = parse_None_Double_Percent_numberArg(args[0])
-                    val green: Int = parse_None_Double_Percent_numberArg(args[1])
-                    val blue: Int = parse_None_Double_Percent_numberArg(args[2])
-                    val alpha: Double = if (args.size == 4) parseAlpha(args[3]) else 0.0
+                    val red: Int = parseNoneDoublePercentNumberArg(args[0])
+                    val green: Int = parseNoneDoublePercentNumberArg(args[1])
+                    val blue: Int = parseNoneDoublePercentNumberArg(args[2])
+                    val alpha: Double = if (args.size == 4) parseAlpha(args[3]) else 1.0
 
                     CssColor.fromRGBA(red, green, blue, alpha)
                 }
@@ -32,29 +31,27 @@ class ColorNode private constructor(private var color: Lazy<CssColor>) : ASTNode
 //                    val l: Int = parse_None_Double_Percent_numberArg(args[2])
 //                    val a: Int = if (args.size == 4) parseAlpha(args[3]) else 0
 //
-//                    CssColor.fromHSLA(red, green, blue, alpha)
+//                    color.CssColor.fromHSLA(red, green, blue, alpha)
 //                }
-                else -> throw SemanticException("Unknown function: $name")
+                else -> throw UNKNOWN_FUNCTION.get(name)
             }
+
+        private fun parseNoneDoublePercentNumberArg(arg: NumberNode) = when (arg) {
+            is NoneNode -> arg.compute().roundToInt()
+            is DoubleNode -> arg.compute().roundToInt()
+            is DoublePercentNode -> (arg.compute() * 2.55).roundToInt()
         }
 
-        private fun parse_None_Double_Percent_numberArg(arg: NumberNode) =
-            when (arg) {
-                is NumberNode.NoneNode -> arg.compute().roundToInt()
-                is NumberNode.DoubleNode -> arg.compute().roundToInt()
-                is NumberNode.DoublePercentNode -> (arg.compute() * 2.55).roundToInt()
-            }
-
 //            private fun parseAngle(arg: NumberNode, percentCoefficient: Double = 1.0) = when (arg) {
-//                is NumberNode.DoubleNode -> arg.compute().toInt()
-//                is NumberNode.DoublePercentNode -> (arg.compute() * percentCoefficient).toInt()
-//                else -> throw SemanticException("Alpha argument error: $arg")
+//                is DoubleNode -> arg.compute().toInt()
+//                is DoublePercentNode -> (arg.compute() * percentCoefficient).toInt()
+//                else -> throw ALPHA_ARGUMENT_ERROR.get(arg.toString())
 //            }
 
         private fun parseAlpha(arg: NumberNode) = when (arg) {
-            is NumberNode.DoubleNode -> arg.compute()
-            is NumberNode.DoublePercentNode -> arg.compute() * 0.01
-            else -> throw SemanticException("Alpha argument error: $arg")
+            is DoubleNode -> arg.compute()
+            is DoublePercentNode -> arg.compute() * 0.01
+            else -> throw ALPHA_ARGUMENT_ERROR.get(arg.toString())
         }
     }
 

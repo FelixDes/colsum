@@ -4,6 +4,7 @@ import translator.nodes.ASTNode
 import translator.nodes.ColorNode
 import translator.nodes.NumberNode
 import translator.tokenization.TokenType
+import translator.tokenization.TokenType.*
 
 internal sealed class FunctionParser<ResT : ASTNode<*>, ArgT : ASTNode<*>>(
     tokens: List<Pair<TokenType, String>>
@@ -15,7 +16,7 @@ internal sealed class FunctionParser<ResT : ASTNode<*>, ArgT : ASTNode<*>>(
         private val separatorList: List<Parsable<*>>
     ) : Parser<ASTNode.FunctionRepresentationNode<FuncArgT>>(tokens) {
         override fun consumeDelegate(pos: Int): ParseResult<ASTNode.FunctionRepresentationNode<FuncArgT>> {
-            val functionNameRes = LexemeByTokenParser(tokens, TokenType.FUN_NAME).consume(pos)
+            val functionNameRes = LexemeByTokenParser(tokens, FUN_NAME).consume(pos)
             var localPos = functionNameRes.posOffset
             val name: String = functionNameRes.nodeList[0].compute()
 
@@ -62,7 +63,7 @@ internal sealed class FunctionParser<ResT : ASTNode<*>, ArgT : ASTNode<*>>(
             if (rep.name == "calc") {
                 return ParseResult(rep.posOffset, rep.argNodes)
             } else {
-                throw ParseException("`calc` function expected but was `$rep.name`")
+                throw ParseException("`calc` function expected but was `${rep.name}`")
             }
         }
     }
@@ -74,18 +75,18 @@ internal sealed class FunctionParser<ResT : ASTNode<*>, ArgT : ASTNode<*>>(
         override fun consumeDelegate(pos: Int): ParseResult<ColorNode> {
             val possibleSeparatorPatterns = listOf(
                 listOf(
-                    SingleTokenParser(tokens, TokenType.COMMA_SEPARATOR),
-                    SingleTokenParser(tokens, TokenType.COMMA_SEPARATOR),
-                    SingleTokenParser(tokens, TokenType.COMMA_SEPARATOR),
+                    SingleTokenParser(tokens, COMMA_SEPARATOR),
+                    SingleTokenParser(tokens, COMMA_SEPARATOR),
+                    SingleTokenParser(tokens, COMMA_SEPARATOR),
                 ),
                 listOf(
                     EmptyParser,
                     EmptyParser,
-                    SingleTokenParser(tokens, TokenType.SLASH_SEPARATOR)
+                    SingleTokenParser(tokens, SLASH_SEPARATOR)
                 ),
                 listOf(
-                    SingleTokenParser(tokens, TokenType.COMMA_SEPARATOR),
-                    SingleTokenParser(tokens, TokenType.COMMA_SEPARATOR),
+                    SingleTokenParser(tokens, COMMA_SEPARATOR),
+                    SingleTokenParser(tokens, COMMA_SEPARATOR),
                 ),
                 listOf(
                     EmptyParser,
@@ -111,7 +112,7 @@ internal sealed class FunctionParser<ResT : ASTNode<*>, ArgT : ASTNode<*>>(
                 funcArgParsers
             ).consume(pos).nodeList[0].compute()
 
-            val func = ColorNode(rep.name, rep.argNodes)
+            val func = ColorNode.nodeForFunction(rep.name, rep.argNodes)
             return ParseResult(rep.posOffset, listOf(func))
         }
     }
