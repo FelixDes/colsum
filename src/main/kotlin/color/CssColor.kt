@@ -96,7 +96,7 @@ data class CssColor(
             }
         }
 
-        fun fromConstant(constant: String): CssColor = ConstantColors[constant.lowercase()]
+        fun fromConstant(constant: String): CssColor = ConstantColorsService[constant.lowercase()]
     }
 
 
