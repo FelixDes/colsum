@@ -2,7 +2,7 @@ package translator.tokenization
 
 import kotlin.math.min
 
-class TokenizerException(message: String) : Exception(message)
+class TokenizerException(message: String) : RuntimeException(message)
 
 class Tokenizer {
     companion object {

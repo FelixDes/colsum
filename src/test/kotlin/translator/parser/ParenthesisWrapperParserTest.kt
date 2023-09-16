@@ -1,12 +1,12 @@
 package translator.parser
 
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
+import io.kotest.assertions.assertSoftly
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.shouldBe
 import translator.tokenization.TokenType.*
-import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class ParenthesisWrapperParserTest {
+class ParenthesisWrapperParserTest : AnnotationSpec() {
     private val tokenSequence = listOf(
         PARENTHESIS_OPEN to "(",
         NUMBER to "2",
@@ -22,18 +22,17 @@ class ParenthesisWrapperParserTest {
         // given
         val tokens = tokenSequence
         val innerParser = Parser.WhileSeparatorParser(
-            tokens,
-            Parser.NumberParser(tokens),
-            Parser.SingleTokenParser(tokens, COMMA_SEPARATOR)
+            tokens, Parser.NumberParser(tokens), Parser.SingleTokenParser(tokens, COMMA_SEPARATOR)
         )
         val parser = Parser.ParenthesisWrapperParser(tokens, innerParser)
         // when
         val parserResult = parser.consume(0)
         // then
-        assertAll(
-            { assertEquals(7, parserResult.posOffset) },
-            { assertEquals(listOf(2.0, 3.0, 4.0), parserResult.nodeList.map { it.compute() }) }
-        )
+        assertSoftly {
+            parserResult.posOffset shouldBe tokenSequence.size
+            parserResult.nodeList.map { it.compute() } shouldBe listOf(2.0, 3.0, 4.0)
+        }
+
     }
 
     @Test

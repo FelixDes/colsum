@@ -15,21 +15,13 @@ sealed class NumberNode private constructor(
 
     data object NoneNode : NumberNode(0.0) {
 
-        override fun plus(other: NumberNode): NumberNode {
-            throw NONE_CALCULATION.get()
-        }
+        override fun plus(other: NumberNode): NumberNode = throw NONE_CALCULATION.get()
 
-        override fun minus(other: NumberNode): NumberNode {
-            throw NONE_CALCULATION.get()
-        }
+        override fun minus(other: NumberNode): NumberNode = throw NONE_CALCULATION.get()
 
-        override fun div(other: NumberNode): NumberNode {
-            throw NONE_CALCULATION.get()
-        }
+        override fun div(other: NumberNode): NumberNode = throw NONE_CALCULATION.get()
 
-        override fun times(other: NumberNode): NumberNode {
-            throw NONE_CALCULATION.get()
-        }
+        override fun times(other: NumberNode): NumberNode = throw NONE_CALCULATION.get()
 
         override fun validateNode(other: NumberNode) {
             if (other !is NoneNode) throw IMPOSSIBLE_CAST.get()
@@ -120,7 +112,7 @@ sealed class NumberNode private constructor(
     companion object {
         fun buildNone(): NumberNode = NoneNode
 
-        fun buildPercent(value: Double): NumberNode = DoublePercentNode(value)
+        private fun buildPercent(value: Double): NumberNode = DoublePercentNode(value)
 
         fun buildPercent(value: String): NumberNode =
             buildPercent(BigDecimal(value.substringBefore('%')).toDouble())

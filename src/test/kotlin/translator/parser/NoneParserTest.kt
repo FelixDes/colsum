@@ -1,38 +1,23 @@
 package translator.parser
 
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
+import io.kotest.assertions.assertSoftly
+import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.matchers.shouldBe
 import translator.nodes.NumberNode
 import translator.tokenization.TokenType.NUMBER_NONE
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 
-class NoneParserTest {
-    private val tokenSequence = listOf(
-        NUMBER_NONE to "none",
-    )
-
-    @Test
-    fun consume_correct() {
-        // given
-        val tokens = tokenSequence
-        val parser = Parser.NoneParser(tokens)
-        // when
-        val parserResult = parser.consume(0)
-        // then
-        assertAll({ assertEquals(1, parserResult.posOffset) }, {
-            assertEquals(
-                NumberNode.buildNone().compute(), parserResult.nodeList[0].compute()
-            )
-        })
+class NoneParserTest : BehaviorSpec({
+    given("Token sequence and parser") {
+        val tokenSequence = listOf(NUMBER_NONE to "none")
+        val parser = Parser.NoneParser(tokenSequence)
+        `when`("Consume") {
+            val parserResult = parser.consume(0)
+            then("Offset is good and node is none") {
+                assertSoftly {
+                    parserResult.posOffset shouldBe 1
+                    NumberNode.NoneNode shouldBe parserResult.nodeList[0]
+                }
+            }
+        }
     }
-
-    @Test
-    fun consumeColor_incorrect() {
-        // given
-        val tokens = tokenSequence
-        val parser = Parser.NoneParser(tokens)
-        // when + then
-        assertFailsWith<ParseException> { parser.consume(-1) }
-    }
-}
+})

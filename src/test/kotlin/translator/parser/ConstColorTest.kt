@@ -1,42 +1,39 @@
 package translator.parser
 
 import color.CssColor
-import org.junit.jupiter.api.assertAll
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
-import org.junit.jupiter.params.provider.MethodSource
+import io.kotest.assertions.assertSoftly
+import io.kotest.common.ExperimentalKotest
+import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.datatest.withData
+import io.kotest.matchers.shouldBe
 import translator.tokenization.TokenType
-import translator.tokenization.TokenType.*
-import kotlin.test.assertEquals
+import translator.tokenization.TokenType.COLOR_CONST
 
-class ConstColorTest {
-    companion object {
-        @JvmStatic
-        fun tokenSequence() = listOf(
-            Arguments.of(
-                listOf(COLOR_CONST to "aqua"),
-                CssColor.fromConstant("aqua")
-            ),
-            Arguments.of(
-                listOf(COLOR_CONST to "wheat"),
-                CssColor.fromConstant("wheat")
-            )
+@OptIn(ExperimentalKotest::class)
+class ConstColorTest : BehaviorSpec({
+    data class TestData(val tokens: List<Pair<TokenType, String>>, val expected: CssColor)
+
+    withData(
+        TestData(
+            listOf(COLOR_CONST to "aqua"),
+            CssColor.fromConstant("aqua")
+        ),
+        TestData(
+            listOf(COLOR_CONST to "wheat"),
+            CssColor.fromConstant("wheat")
         )
+    ) { (tokens, color) ->
+        given("Parser") {
+            val parser = Parser.ColorParser(tokens)
+            `when`("Consume") {
+                val parserResult = parser.consume(0)
+                then("Check") {
+                    assertSoftly {
+                        parserResult.posOffset shouldBe tokens.size
+                        parserResult.nodeList[0].compute() shouldBe color
+                    }
+                }
+            }
+        }
     }
-
-    @ParameterizedTest
-    @MethodSource("tokenSequence")
-    fun consume_correct(tokens: List<Pair<TokenType, String>>, color: CssColor) {
-        // given
-        val parser = Parser.ColorParser(tokens)
-        // when
-        val parserResult = parser.consume(0)
-        // then
-        assertAll({ assertEquals(1, parserResult.posOffset) }, {
-            assertEquals(
-                color,
-                parserResult.nodeList[0].compute()
-            )
-        })
-    }
-}
+})

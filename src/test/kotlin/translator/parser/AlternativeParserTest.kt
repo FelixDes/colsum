@@ -1,33 +1,22 @@
 package translator.parser
 
-import org.junit.jupiter.api.assertAll
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
-import org.junit.jupiter.params.provider.MethodSource
+import io.kotest.assertions.assertSoftly
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.datatest.withData
+import io.kotest.matchers.shouldBe
 import translator.nodes.NumberNode
 import translator.parser.Parser.*
 import translator.tokenization.TokenType
-import translator.tokenization.TokenType.*
-import kotlin.test.assertEquals
+import translator.tokenization.TokenType.NUMBER
+import translator.tokenization.TokenType.NUMBER_NONE
 
-class AlternativeParserTest {
-    companion object {
-        @JvmStatic
-        fun tokenSequence() = listOf(
-            Arguments.of(
-                listOf(NUMBER to "13"),
-                NumberNode.buildNumber(13.0)
-            ),
-            Arguments.of(
-                listOf(NUMBER_NONE to "none"),
-                NumberNode.buildNone()
-            )
-        )
-    }
+class AlternativeParserTest : FunSpec({
+    data class TestData(val tokens: List<Pair<TokenType, String>>, val expected: NumberNode)
 
-    @ParameterizedTest
-    @MethodSource("tokenSequence")
-    fun consume_correct(tokens: List<Pair<TokenType, String>>, node: NumberNode) {
+    withData(
+        TestData(listOf(NUMBER to "13"), NumberNode.buildNumber(13.0)),
+        TestData(listOf(NUMBER_NONE to "none"), NumberNode.buildNone())
+    ) { (tokens, node) ->
         // given
         val parser = AlternativeParser(
             tokens, listOf(
@@ -37,11 +26,9 @@ class AlternativeParserTest {
         // when
         val parserResult = parser.consume(0)
         // then
-        assertAll({ assertEquals(1, parserResult.posOffset) }, {
-            assertEquals(
-                node.compute(),
-                parserResult.nodeList[0].compute()
-            )
-        })
+        assertSoftly {
+            parserResult.posOffset shouldBe 1
+            parserResult.nodeList[0].compute() shouldBe node.compute()
+        }
     }
-}
+})

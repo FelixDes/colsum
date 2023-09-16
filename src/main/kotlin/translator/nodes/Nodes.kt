@@ -4,9 +4,8 @@ import translator.parser.ParseException
 import translator.tokenization.TokenType
 import translator.tokenization.TokenType.*
 
-class SemanticException private constructor(val code: CODE?, e: Throwable?, msg: String?) :
-    Exception() {
-    private constructor(code: CODE?, msg: String?) : this(code, null, msg)
+class SemanticException private constructor(val code: CODE, e: Throwable?, msg: String) : RuntimeException() {
+    private constructor(code: CODE, msg: String) : this(code, null, msg)
 
     enum class CODE(private val description: String) {
         NONE_CALCULATION("Cannot do calculation on `none`"),
@@ -19,8 +18,7 @@ class SemanticException private constructor(val code: CODE?, e: Throwable?, msg:
         fun get(): SemanticException = SemanticException(this, description)
         fun get(msg: String): SemanticException = SemanticException(this, "$description: $msg")
         fun get(e: Throwable): SemanticException = SemanticException(this, e, description)
-        fun get(e: Throwable, msg: String): SemanticException =
-            SemanticException(this, e, "$description: $msg")
+        fun get(e: Throwable, msg: String): SemanticException = SemanticException(this, e, "$description: $msg")
     }
 }
 

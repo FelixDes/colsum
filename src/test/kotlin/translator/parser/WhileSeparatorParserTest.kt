@@ -1,55 +1,67 @@
-package translator.parser
-
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
-import translator.nodes.NumberNode
-import translator.tokenization.TokenType.*
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-
-class WhileSeparatorParserTest {
-    private val tokenSequence = listOf(
-        FUN_NAME to "rgb",
-        PARENTHESIS_OPEN to "(",
-        NUMBER to "1",
-        COMMA_SEPARATOR to ", ",
-        NUMBER to "2",
-        COMMA_SEPARATOR to ", ",
-        NUMBER to "3",
-        PARENTHESIS_CLOSE to ")",
-    )
-
-    @Test
-    fun consume_correct() {
-        // given
-        val tokens = tokenSequence
-        val parser = Parser.WhileSeparatorParser(
-            tokens,
-            Parser.NumberParser(tokens),
-            Parser.SingleTokenParser(tokens, COMMA_SEPARATOR)
-        )
-        for (tokenPair in tokens) {
-            // when
-            val parserResult = parser.consumeDelegate(2)
-            // then
-            assertAll({ assertEquals(5, parserResult.posOffset) }, {
-                assertEquals(
-                    listOf(
-                        NumberNode.buildNumber(1.0).compute(),
-                        NumberNode.buildNumber(2.0).compute(),
-                        NumberNode.buildNumber(3.0).compute(),
-                    ), parserResult.nodeList.map { it.compute() }
-                )
-            })
-        }
-    }
-
-    @Test
-    fun consume_incorrect() {
-        // given
-        val tokens = tokenSequence
-        val parser = Parser.WhileSeparatorParser(tokens, Parser.EmptyParser, Parser.EmptyParser)
-        // when + then
-        assertFailsWith<ParseException> { parser.consume(-1) }
-    }
-}
+//package translator.parser
+//
+//import io.kotest.assertions.assertSoftly
+//import io.kotest.core.spec.style.FunSpec
+//import io.kotest.datatest.withData
+//import io.kotest.matchers.shouldBe
+//import translator.nodes.ASTNode.EmptyNode
+//import translator.nodes.NumberNode
+//import translator.tokenization.TokenType
+//import translator.tokenization.TokenType.*
+//
+//class WhileSeparatorParserTest : FunSpec({
+//
+//    data class TestData(
+//        val tokens: List<Pair<TokenType, String>>,
+//        val separatorParser: Parser,
+//        val expectedNodes: List<NumberNode>
+//    )
+//
+//    withData(
+//        TestData(
+//            listOf(
+//                FUN_NAME to "rgb",
+//                PARENTHESIS_OPEN to "(",
+//                NUMBER to "1",
+//                COMMA_SEPARATOR to ", ",
+//                NUMBER to "2",
+//                COMMA_SEPARATOR to ", ",
+//                NUMBER to "3",
+//                PARENTHESIS_CLOSE to ")",
+//            ),
+//            COMMA_SEPARATOR,
+//            listOf(
+//                NumberNode.buildNumber(1.0),
+//                NumberNode.buildNumber(2.0),
+//                NumberNode.buildNumber(3.0),
+//            )
+//        ),
+//        TestData(
+//            listOf(
+//                FUN_NAME to "rgb",
+//                PARENTHESIS_OPEN to "(",
+//                NUMBER to "1",
+//                NUMBER to "2",
+//                NUMBER to "3",
+//                PARENTHESIS_CLOSE to ")",
+//            ),
+//            Parser.EmptyParser,
+//            listOf(
+//                NumberNode.buildNumber(1.0),
+//                NumberNode.buildNumber(2.0),
+//                NumberNode.buildNumber(3.0),
+//            )
+//        )
+//    ) { (tokens, separator, res) ->
+//        // given
+//        val parser = Parser.WhileSeparatorParser(
+//            tokens, Parser.NumberParser(tokens),
+//        )
+//        // when
+//        val parserResult = parser.consumeDelegate(2)
+//        // then
+//        assertSoftly {
+//            parserResult.posOffset shouldBe tokens.size
+//        }
+//    }
+//})

@@ -8,7 +8,7 @@ import translator.nodes.NumberNode
 import translator.tokenization.TokenType
 import translator.tokenization.TokenType.*
 
-open class ParseException(message: String) : Exception(message)
+class ParseException(message: String) : Exception(message)
 
 data class ParseResult<T : ASTNode<*>>(
     val code: ResultCode = ResultCode.OK, val posOffset: Int, val nodeList: List<T>

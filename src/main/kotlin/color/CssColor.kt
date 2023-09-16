@@ -1,10 +1,8 @@
 package color
 
-import color.ConstantColors.Companion.CONSTANT_COLORS
 import translator.nodes.Calculable
 import kotlin.math.abs
 import kotlin.math.round
-import kotlin.math.roundToInt
 
 // TODO("HWB LAB LCH OKLAB OKLCH")
 
@@ -53,10 +51,11 @@ data class CssColor(
         }
 
         fun fromRGBA(
-            red: Int, green: Int, blue: Int, alpha: Double = 1.0
-        ): CssColor {
-            return CssColor(red, green, blue, alpha)
-        }
+            red: Int,
+            green: Int,
+            blue: Int,
+            alpha: Double = 1.0
+        ): CssColor = CssColor(red, green, blue, alpha)
 
         fun fromHSLA(
             hue: Int, saturation: Int, lightness: Int, alpha: Double = 1.0
@@ -97,8 +96,7 @@ data class CssColor(
             }
         }
 
-        fun fromConstant(constant: String): CssColor = CONSTANT_COLORS[constant.lowercase()]?.value
-            ?: throw IllegalArgumentException("Incorrect color name: $constant")
+        fun fromConstant(constant: String): CssColor = ConstantColors[constant.lowercase()]
     }
 
 
@@ -119,26 +117,20 @@ data class CssColor(
         val resBlue = bgBlue * bgAlpha * (1 - addingAlpha) + addingBlue * addingAlpha
 
         return fromRGBA(
-            (resRed * 255).roundToInt(),
-            (resGreen * 255).roundToInt(),
-            (resBlue * 255).roundToInt(),
+            (resRed * 255).toInt(),
+            (resGreen * 255).toInt(),
+            (resBlue * 255).toInt(),
             resAlpha
         )
     }
 
-    override fun minus(other: CssColor): CssColor {
-        TODO("Not yet implemented")
-    }
+    override fun minus(other: CssColor): CssColor = throw UnsupportedOperationException()
 
-    override fun div(other: CssColor): CssColor {
-        TODO("Not yet implemented")
-    }
+    override fun div(other: CssColor): CssColor = throw UnsupportedOperationException()
 
-    override fun times(other: CssColor): CssColor {
-        TODO("Not yet implemented")
-    }
+    override fun times(other: CssColor): CssColor = throw UnsupportedOperationException()
 
-    override fun toString(): String {
-        return "rgba($red, $green, $blue, $alpha)"
-    }
+    override fun toString(): String = "rgba($red, $green, $blue, $alpha)"
 }
+
+fun List<CssColor>.sum(): CssColor = this.reduce { c1, c2 -> c1 + c2 }

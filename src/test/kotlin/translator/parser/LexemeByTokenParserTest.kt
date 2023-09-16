@@ -1,16 +1,13 @@
 package translator.parser
 
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
+import io.kotest.assertions.assertSoftly
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.shouldBe
 import translator.tokenization.TokenType.*
-import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class LexemeByTokenParserTest {
-    private val tokenSequence = listOf(
-        NUMBER to "2",
-        FUN_NAME to "func",
-    )
+class LexemeByTokenParserTest : AnnotationSpec() {
+    private val tokenSequence = listOf(NUMBER to "2", FUN_NAME to "func")
 
     @Test
     fun consume_correct() {
@@ -21,17 +18,17 @@ class LexemeByTokenParserTest {
             val parser = Parser.LexemeByTokenParser(tokens, tokenPair.first)
             val parserResult = parser.consumeDelegate(index)
             // then
-            assertAll({ assertEquals(1, parserResult.posOffset) }, {
-                assertEquals(tokenPair.second, parserResult.nodeList[0].compute())
-            })
+            assertSoftly {
+                parserResult.posOffset shouldBe 1
+                parserResult.nodeList[0].compute() shouldBe tokenPair.second
+            }
         }
     }
 
     @Test
     fun consume_incorrect() {
         // given
-        val tokens = tokenSequence
-        val parser = Parser.LexemeByTokenParser(tokens, PARENTHESIS_OPEN)
+        val parser = Parser.LexemeByTokenParser(tokenSequence, PARENTHESIS_OPEN)
         // when + then
         assertFailsWith<ParseException> { parser.consume(-1) }
     }
