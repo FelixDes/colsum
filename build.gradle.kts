@@ -1,10 +1,14 @@
 plugins {
     kotlin("jvm") version "1.9.0"
+    kotlin("plugin.serialization") version "1.9.0"
+    id("org.jetbrains.kotlinx.kover") version "0.7.3"
+    id("io.kotest") version "0.4.10"
     application
 }
 
 group = "org.colsum"
 version = "1.0-SNAPSHOT"
+val kotestVersion by extra { "5.7.2" }
 
 repositories {
     mavenCentral()
@@ -12,10 +16,12 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.5")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.1")
+
+    // ======= TESTS =======
     testImplementation(kotlin("test"))
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0")
-    testImplementation("org.mockito:mockito-core:4.2.0")
-    testImplementation("junit:junit:4.13.2")
+    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+    testImplementation("io.kotest:kotest-framework-datatest-jvm:$kotestVersion")
 }
 
 tasks.test {
