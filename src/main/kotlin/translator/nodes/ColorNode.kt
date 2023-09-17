@@ -49,9 +49,9 @@ class ColorNode private constructor(private var color: Lazy<CssColor>) : ASTNode
 //            }
 
         private fun parseAlpha(arg: NumberNode) = when (arg) {
+            is NoneNode -> arg.compute()
             is DoubleNode -> arg.compute()
             is DoublePercentNode -> arg.compute() * 0.01
-            else -> throw ALPHA_ARGUMENT_ERROR.get(arg.toString())
         }
     }
 

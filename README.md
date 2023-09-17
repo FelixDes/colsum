@@ -21,6 +21,67 @@ Usage:<br>
     </div>
 </div>
 
+# Grammar
+
+Grammar(abnf) of expressions:
+
+```abnf
+root = color [ " + " color ]*
+
+color = color-function  /  hex-color  /  named-color
+
+named-color = white ; https://developer.mozilla.org/en-US/docs/Web/CSS/named-color
+
+color-function = rgb-function  /  rgba-function  /  hsl-function  /  hsla-function
+
+rgb-function = 
+  "rgb(" (percent-or-none, ){2} percent-or-none [, alpha-value ] ")"  /
+  "rgb(" (number-or-none, ){2} number-or-none [, alpha-value ] ")"    /
+  "rgb(" percent-or-none{3} [ / alpha-or-none ] ")"                   /
+  "rgb(" number-or-none{3} [ / alpha-or-none ] ")"
+
+rgba-function = 
+  "rgba(" (percent-or-none, ){2} percent-or-none [, alpha-value ] ")"  /
+  "rgba(" (number-or-none, ){2} number-or-none [, alpha-value ] ")"    /
+  "rgba(" percent-or-none{3} [ / alpha-or-none ] ")"                   /
+  "rgba(" number-or-none{3} [ / alpha-or-none ] ")"
+
+percent-or-none = percent / none
+
+number-or-none = number / none
+
+alpha-or-none = alpha-value / none
+
+hex-color = 
+  "#" HEXDIG{3} [ HEXDIG ]        /
+  "#" hex-group{3} [ hex-group ]  /
+
+hex-group = HEXDIG HEXDIG
+
+calc-function = "calc(" calc-sum ")"  
+
+calc-sum = calc-product [ [ " + " / " - " ] calc-product ]*  
+
+calc-product = calc-value [ [ " * " / " / " ] calc-value ]*  
+
+calc-value = 
+  number           /
+  percent          /
+  calc-constant    /
+  calc-function    /
+  '(' calc-sum ')'   
+
+calc-constant = 
+  e          /
+  pi         /
+  infinity   /
+  -infinity  /
+  NaN
+  
+number = 1; regex: ^[+\-]?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+\-]?\d+)?
+percent = 1%; regex: ^[+\-]?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+\-]?\d+)?%
+```
+
 # 🧑‍💻 For new contributors
 
 🚧 Under construction 🚧
@@ -30,8 +91,6 @@ Usage:<br>
 A brief structural components overview
 
 ## 🔍️ Parser
-
-🚧 Under construction 🚧
 
 ## 🎨 Alpha composition formulas
 
