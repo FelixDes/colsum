@@ -70,30 +70,30 @@ data class CssColor(
                 else -> 360 + hue % 360
             }.toDouble() / 360
 
-            val r: Double
-            val g: Double
-            val b: Double
+            val red: Double
+            val green: Double
+            val blue: Double
             if (s == 0.0) {
-                b = l
-                g = b
-                r = g
+                blue = l
+                green = blue
+                red = green
             } else {
                 val q = if (l < 0.5) l * (1 + s) else l + s - l * s
                 val p = 2 * l - q
-                r = hueToRgb(p, q, h + 1.0 / 3.0)
-                g = hueToRgb(p, q, h)
-                b = hueToRgb(p, q, h - 1.0 / 3.0)
+                red = hueToRgb(p, q, h + 1.0 / 3.0)
+                green = hueToRgb(p, q, h)
+                blue = hueToRgb(p, q, h - 1.0 / 3.0)
             }
-            return fromRGBA((r * 255).roundToInt(), (g * 255).roundToInt(), (b * 255).roundToInt(), alpha)
+            return fromRGBA((red * 255).roundToInt(), (green * 255).roundToInt(), (blue * 255).roundToInt(), alpha)
         }
 
         private fun hueToRgb(p: Double, q: Double, t: Double): Double {
-            var t = t
-            if (t < 0f) t += 1f
-            if (t > 1f) t -= 1f
-            if (t < 1f / 6f) return p + (q - p) * 6f * t
-            if (t < 1f / 2f) return q
-            return if (t < 2f / 3f) p + (q - p) * (2f / 3f - t) * 6f else p
+            var temp = t
+            if (temp < 0f) temp += 1f
+            if (temp > 1f) temp -= 1f
+            if (temp < 1f / 6f) return p + (q - p) * 6f * temp
+            if (temp < 1f / 2f) return q
+            return if (temp < 2f / 3f) p + (q - p) * (2f / 3f - temp) * 6f else p
         }
 
         fun fromConstant(constant: String): CssColor = ConstantColorsService[constant.lowercase()]
