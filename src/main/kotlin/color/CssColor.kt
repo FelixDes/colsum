@@ -1,8 +1,8 @@
 package color
 
 import translator.nodes.Calculable
-import kotlin.math.abs
 import kotlin.math.round
+import kotlin.math.roundToInt
 
 // TODO("HWB LAB LCH OKLAB OKLCH")
 
@@ -57,43 +57,43 @@ data class CssColor(
             alpha: Double = 1.0
         ): CssColor = CssColor(red, green, blue, alpha)
 
-        fun fromHSLA(
-            hue: Int, saturation: Int, lightness: Int, alpha: Double = 1.0
-        ): CssColor {
+        fun fromHSLA(hue: Int, saturation: Int, lightness: Int, alpha: Double = 1.0): CssColor {
             require(saturation in 0..100)
             require(lightness in 0..100)
             require(alpha in 0.0..1.0)
 
-            val satValidated = saturation.toDouble() / 100
-            val lightnessValidated = lightness.toDouble() / 100
+            val s = saturation.toDouble() / 100
+            val l = lightness.toDouble() / 100
 
-            val hueValidated = when {
+            val h = when {
                 hue >= 0 -> hue % 360
-                else -> 360 - hue % 360
+                else -> 360 + hue % 360
+            }.toDouble() / 360
+
+            val r: Double
+            val g: Double
+            val b: Double
+            if (s == 0.0) {
+                b = l
+                g = b
+                r = g
+            } else {
+                val q = if (l < 0.5) l * (1 + s) else l + s - l * s
+                val p = 2 * l - q
+                r = hueToRgb(p, q, h + 1.0 / 3.0)
+                g = hueToRgb(p, q, h)
+                b = hueToRgb(p, q, h - 1.0 / 3.0)
             }
+            return fromRGBA((r * 255).roundToInt(), (g * 255).roundToInt(), (b * 255).roundToInt(), alpha)
+        }
 
-            val c = satValidated * (1 - abs(2 * lightnessValidated - 1))
-            val x = c * (1 - abs((hueValidated.toDouble() / 60) % 2 - 1))
-            val m = lightnessValidated - c / 2
-
-            fun res(red: Double, green: Double, blue: Double): CssColor =
-                fromRGBA(
-                    ((red + m) * 255).toInt(),
-                    ((green + m) * 255).toInt(),
-                    ((blue + m) * 255).toInt(),
-                    alpha
-                )
-
-
-            return when (hueValidated) {
-                in 0..<60 -> res(c, x, 0.0)
-                in 60..<120 -> res(x, c, 0.0)
-                in 120..<180 -> res(0.0, c, x)
-                in 180..<240 -> res(0.0, x, c)
-                in 240..<300 -> res(x, 0.0, c)
-                in 300..<360 -> res(c, 0.0, x)
-                else -> throw IllegalStateException("Incorrect hue: $hueValidated")
-            }
+        private fun hueToRgb(p: Double, q: Double, t: Double): Double {
+            var t = t
+            if (t < 0f) t += 1f
+            if (t > 1f) t -= 1f
+            if (t < 1f / 6f) return p + (q - p) * 6f * t
+            if (t < 1f / 2f) return q
+            return if (t < 2f / 3f) p + (q - p) * (2f / 3f - t) * 6f else p
         }
 
         fun fromConstant(constant: String): CssColor = ConstantColorsService[constant.lowercase()]
