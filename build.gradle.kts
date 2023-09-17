@@ -18,7 +18,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.5")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.1")
 
-    // ======= TESTS =======
+    // ======= TESTS ======= //
     testImplementation(kotlin("test"))
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-framework-datatest-jvm:$kotestVersion")
@@ -50,5 +50,13 @@ tasks {
     }
     build {
         dependsOn(fatJar)
+    }
+}
+
+koverReport {
+    filters {
+        excludes {
+            classes("*Exception*")
+        }
     }
 }
