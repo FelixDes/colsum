@@ -45,6 +45,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           title: Code Coverage
           update-comment: true
-          min-coverage-overall: 60
-          min-coverage-changed-files: 60
+          min-coverage-overall: 75
+          min-coverage-changed-files: 75
           coverage-counter-type: LINE

@@ -16,7 +16,7 @@ fun main(args: Array<String>) {
         ArgType.String,
         shortName = "b",
         fullName = "background",
-        description = "background color"
+        description = "Background color"
     ).default("#FFF")
     parser.parse(args)
 

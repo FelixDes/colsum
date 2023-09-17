@@ -9,7 +9,7 @@
 Simple command line tool for overlaying colors written in Kotlin
 
 ```shell
-java -jar colsum.jar -b "aqua" -e "rgb(55, 12, 2, 0.4) + rgba(1, 50, 217, 0.3)"
+java -jar colsum.jar -b "lightYellow" -e "rgb(55, 12, 2, 0.4) + rgba(1, 50, 217, 0.3)"
 ```
 
 <div style="font-size: 20px">
