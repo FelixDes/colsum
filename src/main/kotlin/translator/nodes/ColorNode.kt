@@ -2,7 +2,7 @@ package translator.nodes
 
 import color.CssColor
 import translator.nodes.NumberNode.*
-import translator.nodes.SemanticException.CODE.ALPHA_ARGUMENT_ERROR
+import translator.nodes.SemanticException.CODE.ILLEGAL_ARGUMENT
 import translator.nodes.SemanticException.CODE.UNKNOWN_FUNCTION
 import kotlin.math.roundToInt
 
@@ -18,40 +18,52 @@ class ColorNode private constructor(private var color: Lazy<CssColor>) : ASTNode
         private fun fromFunction(name: String, args: List<NumberNode>): CssColor =
             when (name) {
                 "rgb", "rgba" -> {
-                    val red: Int = parseNoneDoublePercentNumberArg(args[0])
-                    val green: Int = parseNoneDoublePercentNumberArg(args[1])
-                    val blue: Int = parseNoneDoublePercentNumberArg(args[2])
+                    val red: Int = parseRgbArg(args[0])
+                    val green: Int = parseRgbArg(args[1])
+                    val blue: Int = parseRgbArg(args[2])
                     val alpha: Double = if (args.size == 4) parseAlpha(args[3]) else 1.0
 
                     CssColor.fromRGBA(red, green, blue, alpha)
                 }
-//                "hsl", "hsla" -> {
-//                    val h: Int = parse_None_Double_Percent_numberArg(args[0])
-//                    val s: Int = parse_None_Double_Percent_numberArg(args[1])
-//                    val l: Int = parse_None_Double_Percent_numberArg(args[2])
-//                    val a: Int = if (args.size == 4) parseAlpha(args[3]) else 0
-//
-//                    color.CssColor.fromHSLA(red, green, blue, alpha)
-//                }
+
+                "hsl", "hsla" -> {
+                    val h: Int = parseHue(args[0])
+                    val s: Int = parseHslArg(args[1])
+                    val l: Int = parseHslArg(args[2])
+                    val a: Double = if (args.size == 4) parseAlpha(args[3]) else 1.0
+
+                    CssColor.fromHSLA(h, s, l, a)
+                }
+
                 else -> throw UNKNOWN_FUNCTION.get(name)
             }
 
-        private fun parseNoneDoublePercentNumberArg(arg: NumberNode) = when (arg) {
-            is NoneNode -> arg.compute().roundToInt()
+        private fun parseRgbArg(arg: NumberNode) = when (arg) {
             is DoubleNode -> arg.compute().roundToInt()
             is DoublePercentNode -> (arg.compute() * 2.55).roundToInt()
+            is NoneNode -> arg.compute().roundToInt()
+            is AngleNode -> throw ILLEGAL_ARGUMENT.get("angle")
         }
 
-//            private fun parseAngle(arg: NumberNode, percentCoefficient: Double = 1.0) = when (arg) {
-//                is DoubleNode -> arg.compute().toInt()
-//                is DoublePercentNode -> (arg.compute() * percentCoefficient).toInt()
-//                else -> throw ALPHA_ARGUMENT_ERROR.get(arg.toString())
-//            }
+        private fun parseHue(arg: NumberNode) = when (arg) {
+            is NoneNode -> arg.compute().roundToInt()
+            is DoubleNode -> arg.compute().roundToInt()
+            is AngleNode -> arg.compute().roundToInt()
+            is DoublePercentNode -> throw ILLEGAL_ARGUMENT.get("percent")
+        }
+
+        private fun parseHslArg(arg: NumberNode) = when (arg) {
+            is NoneNode -> arg.compute().roundToInt()
+            is DoublePercentNode -> arg.compute().roundToInt()
+            is AngleNode -> throw ILLEGAL_ARGUMENT.get("angle")
+            is DoubleNode -> throw ILLEGAL_ARGUMENT.get("number")
+        }
 
         private fun parseAlpha(arg: NumberNode) = when (arg) {
-            is NoneNode -> arg.compute()
+            is NoneNode -> throw ILLEGAL_ARGUMENT.get("none")
             is DoubleNode -> arg.compute()
             is DoublePercentNode -> arg.compute() * 0.01
+            is AngleNode -> throw ILLEGAL_ARGUMENT.get("angle")
         }
     }
 

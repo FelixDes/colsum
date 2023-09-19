@@ -3,7 +3,6 @@ package color
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import utils.ResourcePaths.CONSTANT_COLORS
-import java.io.File
 import java.util.regex.Pattern
 import java.util.regex.Pattern.CASE_INSENSITIVE
 
