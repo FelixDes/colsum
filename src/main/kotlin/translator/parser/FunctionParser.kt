@@ -63,12 +63,11 @@ internal sealed class FunctionParser<ResT : ASTNode<*>, ArgT : ASTNode<*>>(
             if (rep.name == "calc") {
                 return ParseResult(rep.posOffset, rep.argNodes)
             } else {
-                throw ParseException("`calc` function expected but was `${rep.name}`")
+                throw ParsingException("`calc` function expected but was `${rep.name}`")
             }
         }
     }
 
-    // HSL - 0.3turn?
     class ColorFunctionParser(tokens: List<Pair<TokenType, String>>) :
         FunctionParser<ColorNode, NumberNode>(tokens) {
 

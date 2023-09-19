@@ -30,6 +30,6 @@ class SingleTokenParserTest : AnnotationSpec() {
         // given
         val parser = Parser.SingleTokenParser(tokenSequence, PARENTHESIS_OPEN)
         // when + then
-        assertFailsWith<ParseException> { parser.consume(-1) }
+        assertFailsWith<ParsingException> { parser.consume(-1) }
     }
 }

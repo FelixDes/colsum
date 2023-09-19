@@ -8,7 +8,7 @@ import translator.nodes.NumberNode
 import translator.tokenization.TokenType
 import translator.tokenization.TokenType.*
 
-class ParseException(message: String) : Exception(message)
+class ParsingException(message: String) : Exception(message)
 
 data class ParseResult<T : ASTNode<*>>(
     val code: ResultCode = ResultCode.OK, val posOffset: Int, val nodeList: List<T>
@@ -20,13 +20,13 @@ data class ParseResult<T : ASTNode<*>>(
 
 interface Parsable<ResT : ASTNode<*>> {
 
-    @Throws(ParseException::class)
+    @Throws(ParsingException::class)
     fun consume(pos: Int): ParseResult<ResT>
 }
 
 interface FailSafeParsable<ResT : ASTNode<*>> {
 
-    @Throws(ParseException::class)
+    @Throws(ParsingException::class)
     fun consumeFailSafe(pos: Int): ParseResult<ResT>
 }
 
@@ -40,12 +40,11 @@ sealed class Parser<ResT : ASTNode<*>>(protected val tokens: List<Pair<TokenType
 
     private fun validate(pos: Int) {
         if (pos !in tokens.indices) {
-            throw ParseException("Invalid position: $pos")
+            throw ParsingException("Invalid position: $pos")
         }
     }
 
     abstract fun consumeDelegate(pos: Int): ParseResult<ResT>
-
 
     data object EmptyParser : Parser<EmptyNode>(tokens = listOf()) {
         override fun consume(pos: Int): ParseResult<EmptyNode> = consumeDelegate(pos)
@@ -53,40 +52,36 @@ sealed class Parser<ResT : ASTNode<*>>(protected val tokens: List<Pair<TokenType
         override fun consumeDelegate(pos: Int): ParseResult<EmptyNode> = ParseResult(0, listOf(EmptyNode))
     }
 
-
     class SingleTokenParser(
         tokens: List<Pair<TokenType, String>>, private val tokenType: TokenType
     ) : Parser<TokenNode>(tokens) {
         override fun consumeDelegate(pos: Int): ParseResult<TokenNode> = if (tokens[pos].first == tokenType) {
             ParseResult(1, listOf(TokenNode(tokenType)))
-        } else throw ParseException("No $tokenType token at pos: $pos")
+        } else throw ParsingException("No $tokenType token at pos: $pos")
     }
-
 
     class LexemeByTokenParser(
         tokens: List<Pair<TokenType, String>>, private val tokenType: TokenType
     ) : Parser<LexemeNode>(tokens) {
         override fun consumeDelegate(pos: Int): ParseResult<LexemeNode> = if (tokens[pos].first == tokenType) {
             ParseResult(1, listOf(LexemeNode(tokens[pos].second)))
-        } else throw ParseException("No $tokenType token at pos: $pos")
+        } else throw ParsingException("No $tokenType token at pos: $pos")
     }
-
 
     private class HexColorParser(
         tokens: List<Pair<TokenType, String>>,
     ) : Parser<ColorNode>(tokens) {
         override fun consumeDelegate(pos: Int): ParseResult<ColorNode> = if (tokens[pos].first == COLOR_HEX) {
             ParseResult(1, listOf(ColorNode.nodeForHex(tokens[pos].second)))
-        } else throw ParseException("No color.CssColor at pos: $pos")
+        } else throw ParsingException("No color.CssColor at pos: $pos")
     }
-
 
     private class ConstColorParser(
         tokens: List<Pair<TokenType, String>>,
     ) : Parser<ColorNode>(tokens) {
         override fun consumeDelegate(pos: Int): ParseResult<ColorNode> = if (tokens[pos].first == COLOR_CONST) {
             ParseResult(1, listOf(ColorNode.nodeForConst(tokens[pos].second)))
-        } else throw ParseException("No color.CssColor at pos: $pos")
+        } else throw ParsingException("No color.CssColor at pos: $pos")
 
     }
 
@@ -115,13 +110,11 @@ sealed class Parser<ResT : ASTNode<*>>(protected val tokens: List<Pair<TokenType
             NUMBER_ANGLE_RAD -> numberForTokenValue(pos, NumberNode::buildAngleRad)
 
             NUMBER_EXP, NUMBER_PI, NUMBER_NEG_INF, NUMBER_POS_INF, NUMBER_NAN -> ParseResult(
-                1,
-                listOf(NumberNode.buildSpecific(tokens[pos].first))
+                1, listOf(NumberNode.buildSpecific(tokens[pos].first))
             )
 
-            else -> throw ParseException("No number at pos: $pos")
+            else -> throw ParsingException("No number at pos: $pos")
         }
-
 
         private inline fun numberForTokenValue(pos: Int, builder: (arg: String) -> NumberNode) =
             ParseResult(1, listOf(builder(tokens[pos].second)))
@@ -133,9 +126,8 @@ sealed class Parser<ResT : ASTNode<*>>(protected val tokens: List<Pair<TokenType
     ) : Parser<NumberNode>(tokens) {
         override fun consumeDelegate(pos: Int): ParseResult<NumberNode> = if (tokens[pos].first == NUMBER_NONE) {
             ParseResult(1, listOf(NumberNode.buildNone()))
-        } else throw ParseException("No `none` at pos: $pos")
+        } else throw ParsingException("No `none` at pos: $pos")
     }
-
 
     class AlternativeParser<ResT : ASTNode<*>>(
         tokens: List<Pair<TokenType, String>>, private val parsers: List<Parsable<ResT>>
@@ -145,22 +137,21 @@ sealed class Parser<ResT : ASTNode<*>>(protected val tokens: List<Pair<TokenType
                 var r: ParseResult<ResT>? = null
                 try {
                     r = parser.consume(pos)
-                } catch (_: ParseException) {
+                } catch (_: ParsingException) {
                 }
                 if (r != null) {
                     return r
                 }
             }
-            throw ParseException("'AlternativeParser': No parsers: $parsers can be applied to pos: $pos")
+            throw ParsingException("'AlternativeParser': No parsers: $parsers can be applied to pos: $pos")
         }
 
         override fun consumeFailSafe(pos: Int): ParseResult<ResT> = try {
             consumeDelegate(pos)
-        } catch (_: ParseException) {
+        } catch (_: ParsingException) {
             ParseResult(ParseResult.ResultCode.FAIL, 0, listOf())
         }
     }
-
 
     class WhileSeparatorParser<ResT : ASTNode<*>>(
         tokens: List<Pair<TokenType, String>>, private val parser: Parsable<ResT>, private val separator: Parsable<*>
@@ -175,11 +166,11 @@ sealed class Parser<ResT : ASTNode<*>>(protected val tokens: List<Pair<TokenType
                     val argResult: ParseResult<ResT> = parser.consume(pos + localPos)
                     localPos += argResult.posOffset
                     nodeList.addAll(argResult.nodeList)
-                } catch (_: ParseException) {
+                } catch (_: ParsingException) {
                     if (!firstVisited) {
                         return ParseResult(localPos, nodeList)
                     } else {
-                        throw ParseException("'WhileSeparatorParser': Failed arg consume after separator at pos: ${pos + localPos}")
+                        throw ParsingException("'WhileSeparatorParser': Failed arg consume after separator at pos: ${pos + localPos}")
                     }
                 }
                 firstVisited = true
@@ -187,7 +178,7 @@ sealed class Parser<ResT : ASTNode<*>>(protected val tokens: List<Pair<TokenType
                 try {
                     val sepResult = separator.consume(pos + localPos)
                     localPos += sepResult.posOffset
-                } catch (_: ParseException) {
+                } catch (_: ParsingException) {
                     return ParseResult(localPos, nodeList)
                 }
             }
@@ -218,7 +209,6 @@ sealed class Parser<ResT : ASTNode<*>>(protected val tokens: List<Pair<TokenType
             return ParseResult(localPos, nodeList)
         }
     }
-
 
     class ParenthesisWrapperParser<ResT : ASTNode<*>>(
         tokens: List<Pair<TokenType, String>>, private val innerParser: Parsable<ResT>
@@ -314,4 +304,3 @@ sealed class Parser<ResT : ASTNode<*>>(protected val tokens: List<Pair<TokenType
         }
     }
 }
-

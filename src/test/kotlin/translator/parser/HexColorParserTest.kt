@@ -33,7 +33,7 @@ class HexColorParserTest : AnnotationSpec() {
 
         @Test
         fun consumeColor_incorrect() {
-            assertFailsWith<ParseException> { Parser.ColorParser(tokenSequence).consume(-1) }
+            assertFailsWith<ParsingException> { Parser.ColorParser(tokenSequence).consume(-1) }
         }
     }
 }
