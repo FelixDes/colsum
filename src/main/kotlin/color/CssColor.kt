@@ -102,24 +102,24 @@ data class CssColor(
 
     override fun plus(other: CssColor): CssColor {
         val bgAlpha = this.alpha
-        val bgRed = this.red.toDouble() / 255
-        val bgGreen = this.green.toDouble() / 255
-        val bgBlue = this.blue.toDouble() / 255
+        val bgRed = this.red.toDouble()
+        val bgGreen = this.green.toDouble()
+        val bgBlue = this.blue.toDouble()
 
         val addingAlpha = other.alpha
-        val addingRed = other.red.toDouble() / 255
-        val addingGreen = other.green.toDouble() / 255
-        val addingBlue = other.blue.toDouble() / 255
+        val addingRed = other.red.toDouble()
+        val addingGreen = other.green.toDouble()
+        val addingBlue = other.blue.toDouble()
 
-        val resAlpha = bgAlpha * (1 - addingAlpha) + addingAlpha
-        val resRed = bgRed * bgAlpha * (1 - addingAlpha) + addingRed * addingAlpha
-        val resGreen = bgGreen * bgAlpha * (1 - addingAlpha) + addingGreen * addingAlpha
-        val resBlue = bgBlue * bgAlpha * (1 - addingAlpha) + addingBlue * addingAlpha
+        val resAlpha = bgAlpha + addingAlpha * (1 - bgAlpha)
+        val resRed = (bgRed * bgAlpha * (1 - addingAlpha) + addingRed * addingAlpha) / resAlpha
+        val resGreen = (bgGreen * bgAlpha * (1 - addingAlpha) + addingGreen * addingAlpha) / resAlpha
+        val resBlue = (bgBlue * bgAlpha * (1 - addingAlpha) + addingBlue * addingAlpha) / resAlpha
 
         return fromRGBA(
-            (resRed * 255).toInt(),
-            (resGreen * 255).toInt(),
-            (resBlue * 255).toInt(),
+            resRed.toInt(),
+            resGreen.toInt(),
+            resBlue.toInt(),
             resAlpha
         )
     }

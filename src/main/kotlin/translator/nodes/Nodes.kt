@@ -12,7 +12,7 @@ class SemanticException private constructor(val code: CODE, e: Throwable?, msg: 
         IMPOSSIBLE_CAST("Impossible cast"),
         UNKNOWN_NUMBER_TOKEN("Unknown specific number token"),
         UNKNOWN_FUNCTION("Unknown function"),
-        ALPHA_ARGUMENT_ERROR("Alpha argument error"),
+        ILLEGAL_ARGUMENT("Illegal argument"),
         ;
 
         fun get(): SemanticException = SemanticException(this, description)

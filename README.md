@@ -9,7 +9,7 @@
 Simple command line tool for overlaying colors written in Kotlin
 
 ```shell
-java -jar colsum.jar -b "lightYellow" -e "rgb(55, 12, 2, 0.4) + rgba(1, 50, 217, 0.3)"
+java -jar colsum.jar -b "lightyellow" -e "rgb(55, 12, 2, 0.4) + rgba(1, 50, 217, 0.3)"
 ```
 
 <div style="font-size: 20px">
@@ -35,40 +35,46 @@ named-color = white ; https://developer.mozilla.org/en-US/docs/Web/CSS/named-col
 color-function = rgb-function  /  rgba-function  /  hsl-function  /  hsla-function
 
 rgb-function = 
-  "rgb(" (percent-or-none, ){2} percent-or-none [, alpha-value ] ")"  /
-  "rgb(" (number-or-none, ){2} number-or-none [, alpha-value ] ")"    /
-  "rgb(" percent-or-none{3} [ / alpha-or-none ] ")"                   /
-  "rgb(" number-or-none{3} [ / alpha-or-none ] ")"
+  "rgb(" ( rgb-arg ", " ){2} rgb-arg [ ", " alpha-arg ] ")"  /
+  "rgb(" ( rgb-arg ", " ){2} rgb-arg [ ", " rgb-arg ] ")"
 
 rgba-function = 
-  "rgba(" (percent-or-none, ){2} percent-or-none [, alpha-value ] ")"  /
-  "rgba(" (number-or-none, ){2} number-or-none [, alpha-value ] ")"    /
-  "rgba(" percent-or-none{3} [ / alpha-or-none ] ")"                   /
-  "rgba(" number-or-none{3} [ / alpha-or-none ] ")"
+  "rgba(" ( rgb-arg ", " ){2} rgb-arg [ ", " alpha-arg ] ")"  /
+  "rgba(" ( rgb-arg ", " ){2} rgb-arg [ ", " rgb-arg ] ")"
 
-percent-or-none = percent / none
+hsl-function = 
+  "hsl(" hue ( ", " percent-or-none ){2} [ ", " alpha-arg ] )  /
+  "hsl(" hue percent-or-none{2} [ " / " alpha-arg ] ")"
 
-number-or-none = number / none
+hsla-function = 
+  "hsla(" hue ( ", " percent-or-none ){2} [ ", " alpha-arg ] )  /
+  "hsla(" hue percent-or-none{2} [ " / " alpha-arg ] ")"
 
-alpha-or-none = alpha-value / none
+hue = number  /  angle  /  none
+
+rgb-arg = number  /  percent-or-none
+
+percent-or-none = percent  /  none
+
+alpha-arg = percent  /  number
 
 hex-color = 
-  "#" HEXDIG{3} [ HEXDIG ]        /
   "#" hex-group{3} [ hex-group ]  /
+  "#" HEXDIG{3} [ HEXDIG ]
 
 hex-group = HEXDIG HEXDIG
 
 calc-function = "calc(" calc-sum ")"  
 
-calc-sum = calc-product [ [ " + " / " - " ] calc-product ]*  
+calc-sum = calc-product [ [ " + "  /  " - " ] calc-product ]*  
 
-calc-product = calc-value [ [ " * " / " / " ] calc-value ]*  
+calc-product = calc-value [ [ " * "  /  " / " ] calc-value ]*  
 
 calc-value = 
-  number           /
-  percent          /
-  calc-constant    /
-  calc-function    /
+  number            /
+  percent           /
+  calc-constant     /
+  calc-function     /
   '(' calc-sum ')'   
 
 calc-constant = 
@@ -79,7 +85,8 @@ calc-constant =
   NaN
   
 number = 1; regex: ^[+\-]?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+\-]?\d+)?
-percent = 1%; regex: ^[+\-]?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+\-]?\d+)?%
+percent = number "%"
+angle = number ("deg"  /  "grad"  /  "turn"  /  "rad")
 ```
 
 # 🧑‍💻 For new contributors
@@ -97,6 +104,6 @@ A brief structural components overview
 Сolors are superimposed like, for example, in the Mozilla Firefox browser. Formulas are presented below:
 
 ```
-result alpha = background alpha * (1 - new alpha) + new alpha
-result color[R,G,B] = background alpha * (1 - new alpha) * background color + new color * new alpha
+resAlpha = bgAlpha + addingAlpha * (1 - bgAlpha)
+resRed = (bgRed * bgAlpha * (1 - addingAlpha) + addingRed * addingAlpha) / resAlpha
 ```

@@ -55,32 +55,33 @@ sealed class NumberNode private constructor(
         }
     }
 
-//    class AngleNode(value: Double) : NumberNode(value) {
-//
-//        override fun plus(other: NumberNode): NumberNode {
-//            validateNode(other)
-//            return AngleNode(value + other.value)
-//        }
-//
-//        override fun minus(other: NumberNode): NumberNode {
-//            validateNode(other)
-//            return AngleNode(value - other.value)
-//        }
-//
-//        override fun div(other: NumberNode): NumberNode {
-//            validateNode(other)
-//            return AngleNode(value / other.value)
-//        }
-//
-//        override fun times(other: NumberNode): NumberNode {
-//            validateNode(other)
-//            return AngleNode(value * other.value)
-//        }
-//
-//        override fun validateNode(other: NumberNode) {
-//            if (other !is AngleNode) throw IMPOSSIBLE_CAST.get()
-//        }
-//    }
+    class AngleNode(value: Double) : NumberNode(value) {
+
+
+        override fun plus(other: NumberNode): NumberNode {
+            validateNode(other)
+            return AngleNode(value + other.value)
+        }
+
+        override fun minus(other: NumberNode): NumberNode {
+            validateNode(other)
+            return AngleNode(value - other.value)
+        }
+
+        override fun div(other: NumberNode): NumberNode {
+            validateNode(other)
+            return AngleNode(value / other.value)
+        }
+
+        override fun times(other: NumberNode): NumberNode {
+            validateNode(other)
+            return AngleNode(value * other.value)
+        }
+
+        override fun validateNode(other: NumberNode) {
+            if (other !is AngleNode) throw IMPOSSIBLE_CAST.get()
+        }
+    }
 
     class DoublePercentNode(value: Double) : NumberNode(value) {
 
@@ -110,17 +111,25 @@ sealed class NumberNode private constructor(
     }
 
     companion object {
+        private fun parse(value: String) = BigDecimal(value).toDouble()
+
         fun buildNone(): NumberNode = NoneNode
 
         private fun buildPercent(value: Double): NumberNode = DoublePercentNode(value)
 
-        fun buildPercent(value: String): NumberNode =
-            buildPercent(BigDecimal(value.substringBefore('%')).toDouble())
-
+        fun buildPercent(value: String): NumberNode = buildPercent(BigDecimal(value.substringBefore('%')).toDouble())
 
         fun buildNumber(value: Double): NumberNode = DoubleNode(value)
 
-        fun buildNumber(value: String): NumberNode = buildNumber(BigDecimal(value).toDouble())
+        fun buildNumber(value: String): NumberNode = buildNumber(parse(value))
+
+        fun buildAngleDeg(value: String): NumberNode = buildNumber(value.substringBefore("deg"))
+
+        fun buildAngleGrad(value: String): NumberNode = buildNumber(parse(value.substringBefore("grad")) * 0.9)
+
+        fun buildAngleTurn(value: String): NumberNode = buildNumber(parse(value.substringBefore("turn")) * 360)
+
+        fun buildAngleRad(value: String): NumberNode = buildNumber(parse(value.substringBefore("rad")) * 180 / Math.PI)
 
         fun buildSpecific(value: TokenType): NumberNode = when (value) {
             NUMBER_EXP -> buildNumber(Math.E)

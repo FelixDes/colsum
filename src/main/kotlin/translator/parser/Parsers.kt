@@ -101,13 +101,18 @@ sealed class Parser<ResT : ASTNode<*>>(protected val tokens: List<Pair<TokenType
     }
 
 
-    open class NumberParser(
+    class NumberParser(
         tokens: List<Pair<TokenType, String>>,
     ) : Parser<NumberNode>(tokens) {
         override fun consumeDelegate(pos: Int): ParseResult<NumberNode> = when (tokens[pos].first) {
-            NUMBER -> ParseResult(1, listOf(NumberNode.buildNumber(tokens[pos].second)))
+            NUMBER -> numberForTokenValue(pos, NumberNode::buildNumber)
 
-            NUMBER_PERCENT -> ParseResult(1, listOf(NumberNode.buildPercent(tokens[pos].second)))
+            NUMBER_PERCENT -> numberForTokenValue(pos, NumberNode::buildPercent)
+
+            NUMBER_ANGLE_DEG -> numberForTokenValue(pos, NumberNode::buildAngleDeg)
+            NUMBER_ANGLE_GRAD -> numberForTokenValue(pos, NumberNode::buildAngleGrad)
+            NUMBER_ANGLE_TURN -> numberForTokenValue(pos, NumberNode::buildAngleTurn)
+            NUMBER_ANGLE_RAD -> numberForTokenValue(pos, NumberNode::buildAngleRad)
 
             NUMBER_EXP, NUMBER_PI, NUMBER_NEG_INF, NUMBER_POS_INF, NUMBER_NAN -> ParseResult(
                 1,
@@ -116,6 +121,10 @@ sealed class Parser<ResT : ASTNode<*>>(protected val tokens: List<Pair<TokenType
 
             else -> throw ParseException("No number at pos: $pos")
         }
+
+
+        private inline fun numberForTokenValue(pos: Int, builder: (arg: String) -> NumberNode) =
+            ParseResult(1, listOf(builder(tokens[pos].second)))
     }
 
 
@@ -125,7 +134,6 @@ sealed class Parser<ResT : ASTNode<*>>(protected val tokens: List<Pair<TokenType
         override fun consumeDelegate(pos: Int): ParseResult<NumberNode> = if (tokens[pos].first == NUMBER_NONE) {
             ParseResult(1, listOf(NumberNode.buildNone()))
         } else throw ParseException("No `none` at pos: $pos")
-
     }
 
 
