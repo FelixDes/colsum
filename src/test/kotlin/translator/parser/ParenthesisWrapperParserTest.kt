@@ -47,6 +47,6 @@ class ParenthesisWrapperParserTest : AnnotationSpec() {
         val parser = Parser.ParenthesisWrapperParser(tokens, innerParser)
 
         // when then
-        assertFailsWith<ParseException> { parser.consume(0) }
+        assertFailsWith<ParsingException> { parser.consume(0) }
     }
 }

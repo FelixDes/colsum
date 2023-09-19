@@ -1,6 +1,6 @@
 package translator.nodes
 
-import translator.parser.ParseException
+import translator.parser.ParsingException
 import translator.tokenization.TokenType
 import translator.tokenization.TokenType.*
 
@@ -57,7 +57,7 @@ sealed class ASTNode<ResT> {
             OPERATOR_MINUS -> leftNode - rightNode
             OPERATOR_MUL -> leftNode * rightNode
             OPERATOR_DIV -> leftNode / rightNode
-            else -> throw ParseException("Unknown operation: $operation")
+            else -> throw ParsingException("Unknown operation: $operation")
         }
     }
 

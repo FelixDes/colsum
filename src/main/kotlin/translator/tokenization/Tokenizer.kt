@@ -16,7 +16,7 @@ class Tokenizer {
                     match = token.regex.find(input.trim())
                     if (match != null) {
                         resulTokens.add(token.tokenType to match.value)
-                        input = input.substring(match.range.last() + countSpacesInStart(input) + 1)
+                        input = input.substring(match.range.last() + countSpacesInBegin(input) + 1)
                         break
                     }
                 }
@@ -29,7 +29,7 @@ class Tokenizer {
             return resulTokens
         }
 
-        private fun countSpacesInStart(str: String): Int {
+        private fun countSpacesInBegin(str: String): Int {
             var spaces = 0
             for (c in str) {
                 if (c == ' ') spaces++

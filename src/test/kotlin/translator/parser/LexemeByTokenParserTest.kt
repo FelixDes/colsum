@@ -30,6 +30,6 @@ class LexemeByTokenParserTest : AnnotationSpec() {
         // given
         val parser = Parser.LexemeByTokenParser(tokenSequence, PARENTHESIS_OPEN)
         // when + then
-        assertFailsWith<ParseException> { parser.consume(-1) }
+        assertFailsWith<ParsingException> { parser.consume(-1) }
     }
 }

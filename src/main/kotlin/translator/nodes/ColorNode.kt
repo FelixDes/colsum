@@ -72,14 +72,14 @@ class ColorNode private constructor(private var color: Lazy<CssColor>) : ASTNode
     }
 
     override fun minus(other: ColorNode): ColorNode {
-        TODO("Not yet implemented")
+        return ColorNode(lazy { this.color.value - other.color.value })
     }
 
     override fun div(other: ColorNode): ColorNode {
-        TODO("Not yet implemented")
+        return ColorNode(lazy { this.color.value / other.color.value })
     }
 
     override fun times(other: ColorNode): ColorNode {
-        TODO("Not yet implemented")
+        return ColorNode(lazy { this.color.value * other.color.value })
     }
 }
