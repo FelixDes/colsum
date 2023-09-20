@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: zwaldowski/match-label-action@v2
         with:
-          allowed: fix, features, documentation, config
+          allowed: fix,features,documentation,config
 
 #  build_and_test:
 #    runs-on: ubuntu-latest
@@ -28,6 +28,7 @@ jobs:
 #    #          path: build/libs/*-executable.jar
 #    #          retention-days: 1
   kover_report:
+    permissions: write-all
     runs-on: ubuntu-latest
     steps:
       - name: ⚡️Checkout
@@ -41,10 +42,10 @@ jobs:
         uses: mi-kas/kover-report@v1
         with:
           path: |
-            ${{ github.workspace }}/colsum/build/reports/kover/report.xml
+            ${{ github.workspace }}/build/reports/kover/report.xml
           token: ${{ secrets.GITHUB_TOKEN }}
           title: Code Coverage
           update-comment: true
-          min-coverage-overall: 75
-          min-coverage-changed-files: 75
+          min-coverage-overall: 85
+          min-coverage-changed-files: 85
           coverage-counter-type: LINE

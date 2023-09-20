@@ -23,7 +23,7 @@ Usage:<br>
 
 # Grammar
 
-Grammar(abnf) of expressions:
+Grammar of expressions (ABNF):
 
 ```abnf
 root = color [ " + " color ]*
@@ -91,17 +91,29 @@ angle = number ("deg"  /  "grad"  /  "turn"  /  "rad")
 
 # 🧑‍💻 For new contributors
 
-🚧 Under construction 🚧
+If you want to improve the project follow the steps below:
+
+1. Fork the repository
+2. Create your branch from `develop`
+3. Create merge request to `develop` branch.
+4. Check that GitHub workflow completes
 
 # 🔧 Internals
 
 A brief structural components overview
 
-## 🔍️ Parser
+## 🔍️ Translator
 
+The translator was build according to the classical 3-layer scheme: tokenizer, parser and executor
+1. Tokenizer:  
+Tokenizer tries to apply the token patterns to the sources. If token matches the pattern (regular expression) then tokenizer identifies and classifies it. The result of tokenization process is the list token types and their actual string values.
+2. Parser:  
+Parser builds AST from token sequence. It checks correctness of token subsequences - the way how token chains supplement each other.
+3. Executor:  
+Executor completes the flow with AST nodes execution. Every node is implemented as a functor that returns AST node or domain-specific data wrapper
 ## 🎨 Alpha composition formulas
 
-Сolors are superimposed like, for example, in the Mozilla Firefox browser. Formulas are presented below:
+Colors are superimposed like, for example, in the Mozilla Firefox browser. Formulas are presented below:
 
 ```
 resAlpha = bgAlpha + addingAlpha * (1 - bgAlpha)
