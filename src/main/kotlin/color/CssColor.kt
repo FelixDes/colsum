@@ -130,7 +130,7 @@ data class CssColor(
 
     override fun times(other: CssColor): CssColor = throw UnsupportedOperationException()
 
-    override fun toString(): String = "rgba($red, $green, $blue, $alpha)"
+    override fun toString(): String = "rgb($red, $green, $blue, $alpha)"
 }
 
 fun List<CssColor>.sum(): CssColor = this.reduce { c1, c2 -> c1 + c2 }
