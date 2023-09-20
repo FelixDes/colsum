@@ -9,7 +9,7 @@
 Simple command line tool for overlaying colors implemented in Kotlin
 
 ```shell
-java -jar colsum.jar -b "lightyellow" -e "rgb(55, 12, 2, 0.4) + rgba(1, 50, 217, 0.3)"
+java -jar colsum.jar -b "lightyellow" -e "rgb(55, 12, 2, 0.4) + rgba(calc(0.5 + 0.5), 50, 217, 0.3)"
 ```
 
 <div style="font-size: 20px">
@@ -104,13 +104,13 @@ A brief structural components overview
 
 ## 🔍️ Translator
 
-The translator was build according to the classical 3-layer scheme: tokenizer, parser and executor
-1. Tokenizer:  
-Tokenizer tries to apply the token patterns to the sources. If token matches the pattern (regular expression) then tokenizer identifies and classifies it. The result of tokenization process is the list token types and their actual string values.
+The translator was build according to the classical 3-layer scheme: lexer, parser and executor
+1. Lexer:  
+Lexer tries to apply the token patterns to the sources. If token matches the pattern (regular expression) then lexer identifies and classifies it. The result of tokenization process is the list token types and their actual string values.
 2. Parser:  
 Parser builds AST from token sequence. It checks correctness of token subsequences - the way how token chains supplement each other.
 3. Executor:  
-Executor completes the flow with AST nodes execution. Every node is implemented as a functor that returns AST node or domain-specific data wrapper
+Executor finishes the flow with AST nodes execution. Every node is implemented as a functor that returns AST node or domain-specific data wrapper
 ## 🎨 Alpha composition formulas
 
 Colors are superimposed like, for example, in the Mozilla Firefox browser. Formulas are presented below:
